@@ -37,12 +37,15 @@ changing theme colors or headshot treatment, read `THEMES.md`.
 
 - Local development: `npm install`, then `npm run dev`
 - Production build: `npm run build`
+- Repo-specific Pages build: `VITE_BASE_PATH=/your-repo-name/ npm run build`
 - GitHub Pages deploys automatically on push to `main`
 - GitHub Pages source should be set to **GitHub Actions**
 - Live URL: https://manuelgrios.github.io/personal-portfolioex1/
 
 In GitHub, check **Settings -> Pages -> Source** and confirm it is set to
-**GitHub Actions**.
+**GitHub Actions**. The workflow derives `VITE_BASE_PATH` from the repository
+name so repos created from this template deploy under their own GitHub Pages
+path.
 
 ## Updating Content
 
