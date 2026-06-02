@@ -31,6 +31,23 @@ export type FolioDevTemplatePreviewErrorMessage = {
   reason: string;
 };
 
+export type FolioDevTemplatePreviewLinkClickReason =
+  | "invalid_url"
+  | "external_link"
+  | "download_link"
+  | "mailto_link"
+  | "internal_anchor";
+
+export type FolioDevTemplatePreviewLinkClickMessage = {
+  type: "foliodev:preview:link-click";
+  version: typeof FOLIODEV_TEMPLATE_PREVIEW_VERSION;
+  templateId: typeof FOLIODEV_TEMPLATE_PREVIEW_TEMPLATE_ID;
+  href: string;
+  label?: string;
+  valid: boolean;
+  reason?: FolioDevTemplatePreviewLinkClickReason;
+};
+
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
 }
@@ -71,5 +88,27 @@ export function createPreviewErrorMessage(reason: string): FolioDevTemplatePrevi
     version: FOLIODEV_TEMPLATE_PREVIEW_VERSION,
     templateId: FOLIODEV_TEMPLATE_PREVIEW_TEMPLATE_ID,
     reason,
+  };
+}
+
+export function createPreviewLinkClickMessage({
+  href,
+  label,
+  valid,
+  reason,
+}: {
+  href: string;
+  label?: string;
+  valid: boolean;
+  reason?: FolioDevTemplatePreviewLinkClickReason;
+}): FolioDevTemplatePreviewLinkClickMessage {
+  return {
+    type: "foliodev:preview:link-click",
+    version: FOLIODEV_TEMPLATE_PREVIEW_VERSION,
+    templateId: FOLIODEV_TEMPLATE_PREVIEW_TEMPLATE_ID,
+    href,
+    ...(label ? { label } : {}),
+    valid,
+    ...(reason ? { reason } : {}),
   };
 }

@@ -108,6 +108,36 @@ function numberValue(value: unknown, fallback: number): number {
   return Number.isFinite(parsed) && parsed > 1900 ? parsed : fallback;
 }
 
+function hasValidDomain(hostname: string) {
+  const normalizedHost = hostname.toLowerCase();
+
+  if (normalizedHost === "localhost") {
+    return true;
+  }
+
+  if (!normalizedHost.includes(".")) {
+    return false;
+  }
+
+  return normalizedHost
+    .split(".")
+    .every((label) => /^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/.test(label));
+}
+
+function isValidMailto(value: string) {
+  const email = value.replace(/^mailto:/i, "").trim();
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+function normalizeHttpUrl(value: string) {
+  try {
+    const url = new URL(value);
+    return hasValidDomain(url.hostname) ? value : "";
+  } catch {
+    return "";
+  }
+}
+
 function normalizeUrl(value: unknown): string {
   const url = text(value);
 
@@ -115,11 +145,38 @@ function normalizeUrl(value: unknown): string {
     return "";
   }
 
-  if (/^(https?:|mailto:|\/|#)/i.test(url)) {
+  if (/\s/.test(url)) {
+    return "";
+  }
+
+  if (url.startsWith("/") && !url.startsWith("//")) {
     return url;
   }
 
-  return `https://${url}`;
+  if (url.startsWith("#")) {
+    return url;
+  }
+
+  const schemeMatch = /^[a-zA-Z][a-zA-Z\d+.-]*:/.exec(url);
+  const scheme = schemeMatch?.[0].toLowerCase() ?? "";
+
+  if (["javascript:", "data:", "file:", "blob:", "chrome:", "about:"].includes(scheme)) {
+    return "";
+  }
+
+  if (scheme === "mailto:") {
+    return isValidMailto(url) ? url : "";
+  }
+
+  if (scheme === "http:" || scheme === "https:") {
+    return normalizeHttpUrl(url);
+  }
+
+  if (scheme) {
+    return "";
+  }
+
+  return normalizeHttpUrl(`https://${url}`);
 }
 
 function displayUrl(value: string): string {
