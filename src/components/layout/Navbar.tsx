@@ -2,13 +2,13 @@ import { Download, Menu, X } from "lucide-react";
 import type { MouseEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { navigationItems } from "../../data/navigation";
-import { siteConfig } from "../../data/siteConfig";
+import { useRuntimeData } from "../../data/runtimeData";
 import { scrollToHash } from "../../lib/hashNavigation";
 import { ThemeSwitcher } from "../theme/ThemeSwitcher";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { navigationItems, siteConfig } = useRuntimeData();
   const location = useLocation();
   const navigate = useNavigate();
   const navRef = useRef<HTMLElement>(null);

@@ -2,10 +2,11 @@ import { Link, useParams } from "react-router-dom";
 import { Card } from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Tag } from "../components/ui/Tag";
-import { projects } from "../data/projects";
+import { useRuntimeData } from "../data/runtimeData";
 
 export function ProjectDetail() {
   const { slug } = useParams();
+  const { projects } = useRuntimeData();
   const project = projects.find((item) => item.slug === slug);
 
   if (!project) {

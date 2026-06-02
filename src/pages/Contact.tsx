@@ -1,10 +1,11 @@
 import { Card } from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
-import { profile } from "../data/profile";
-import { socialLinks } from "../data/socialLinks";
+import { useRuntimeData } from "../data/runtimeData";
 import { getIcon } from "../lib/icons";
 
 export function Contact() {
+  const { profile, socialLinks } = useRuntimeData();
+
   return (
     <div className="space-y-8">
       <SectionHeader

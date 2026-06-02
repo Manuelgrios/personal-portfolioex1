@@ -18,15 +18,29 @@ const useBrowserLayoutEffect =
 
 type ThemeProviderProps = {
   children: ReactNode;
+  disableStorage?: boolean;
+  previewThemeId?: string;
 };
 
-export function ThemeProvider({ children }: ThemeProviderProps) {
+export function ThemeProvider({
+  children,
+  disableStorage = false,
+  previewThemeId,
+}: ThemeProviderProps) {
   const [themeId, setThemeId] = useState<ThemeId>(() => {
-    const storedThemeId = readStoredThemeId();
-    return getThemeById(storedThemeId ?? siteConfig.theme.activeTheme).id;
+    const storedThemeId = disableStorage ? undefined : readStoredThemeId();
+    return getThemeById(previewThemeId ?? storedThemeId ?? siteConfig.theme.activeTheme).id;
   });
 
   const currentTheme = getThemeById(themeId);
+
+  useEffect(() => {
+    if (!previewThemeId) {
+      return;
+    }
+
+    setThemeId(getThemeById(previewThemeId).id);
+  }, [previewThemeId]);
 
   useBrowserLayoutEffect(() => {
     applyThemeVariables(currentTheme);
@@ -39,10 +53,13 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
       setTheme(nextThemeId) {
         const nextTheme = getThemeById(nextThemeId);
         setThemeId(nextTheme.id);
-        storeThemeId(nextTheme.id);
+
+        if (!disableStorage && !previewThemeId) {
+          storeThemeId(nextTheme.id);
+        }
       },
     }),
-    [currentTheme],
+    [currentTheme, disableStorage, previewThemeId],
   );
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;

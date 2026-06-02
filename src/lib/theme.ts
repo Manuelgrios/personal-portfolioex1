@@ -5,7 +5,11 @@ const storageKey = "portfolio-theme";
 export const themeStorageKey = storageKey;
 
 export function canUseBrowserStorage() {
-  return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
+  try {
+    return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
+  } catch {
+    return false;
+  }
 }
 
 export function readStoredThemeId() {
@@ -13,7 +17,11 @@ export function readStoredThemeId() {
     return undefined;
   }
 
-  return window.localStorage.getItem(storageKey) ?? undefined;
+  try {
+    return window.localStorage.getItem(storageKey) ?? undefined;
+  } catch {
+    return undefined;
+  }
 }
 
 export function storeThemeId(themeId: string) {
@@ -21,7 +29,11 @@ export function storeThemeId(themeId: string) {
     return;
   }
 
-  window.localStorage.setItem(storageKey, themeId);
+  try {
+    window.localStorage.setItem(storageKey, themeId);
+  } catch {
+    // Preview iframes can run in an opaque origin, where storage access throws.
+  }
 }
 
 export function applyThemeVariables(theme: PortfolioTheme) {

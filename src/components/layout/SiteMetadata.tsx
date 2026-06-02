@@ -1,7 +1,9 @@
 import { useEffect } from "react";
-import { siteConfig } from "../../data/siteConfig";
+import { useRuntimeData } from "../../data/runtimeData";
 
 export function SiteMetadata() {
+  const { siteConfig } = useRuntimeData();
+
   useEffect(() => {
     document.title = siteConfig.siteTitle;
 
@@ -12,7 +14,7 @@ export function SiteMetadata() {
     if (description) {
       description.content = siteConfig.seoDescription;
     }
-  }, []);
+  }, [siteConfig.seoDescription, siteConfig.siteTitle]);
 
   return null;
 }

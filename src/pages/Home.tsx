@@ -5,15 +5,13 @@ import { useTheme } from "../components/theme/useTheme";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { Tag } from "../components/ui/Tag";
-import { profile } from "../data/profile";
-import { projects } from "../data/projects";
-import { skillItems } from "../data/skills";
-import { socialLinks } from "../data/socialLinks";
+import { useRuntimeData } from "../data/runtimeData";
 import { assetPath } from "../lib/assets";
 import { getIcon } from "../lib/icons";
 
 export function Home() {
   const { currentTheme } = useTheme();
+  const { profile, projects, skillItems, socialLinks } = useRuntimeData();
   const featuredProjects = projects
     .filter((project) => project.featured)
     .slice(0, 6);

@@ -2,11 +2,12 @@ import { Link } from "react-router-dom";
 import { Card } from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Tag } from "../components/ui/Tag";
-import { profile } from "../data/profile";
-import { projects } from "../data/projects";
+import { useRuntimeData } from "../data/runtimeData";
 import { getIcon } from "../lib/icons";
 
 export function Projects() {
+  const { profile, projects } = useRuntimeData();
+
   return (
     <div className="space-y-10">
       <SectionHeader
@@ -15,7 +16,6 @@ export function Projects() {
         description={profile.sections.projects.description}
       />
       <div className="grid gap-5 md:grid-cols-2">
-        {/* Project cards are generated from src/data/projects.ts. */}
         {projects.map((project) => {
           const Icon = getIcon(project.icon);
 

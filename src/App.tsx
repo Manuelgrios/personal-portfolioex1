@@ -14,6 +14,7 @@ export default function App() {
       <HashScroll />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/foliodev-preview" element={<Home />} />
         <Route path="/projects" element={<Projects />} />
         <Route path="/projects/:slug" element={<ProjectDetail />} />
         <Route path="/contact" element={<Contact />} />
