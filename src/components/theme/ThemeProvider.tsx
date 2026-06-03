@@ -15,6 +15,7 @@ import { applyThemeVariables, readStoredThemeId, storeThemeId } from "../../lib/
 import { ThemeContext, type ThemeContextValue } from "./ThemeContext";
 const useBrowserLayoutEffect =
   typeof window === "undefined" ? useEffect : useLayoutEffect;
+const isFolioDevPreviewRuntime = import.meta.env.VITE_FOLIODEV_PREVIEW_RUNTIME === "true";
 
 type ThemeProviderProps = {
   children: ReactNode;
@@ -28,7 +29,7 @@ export function ThemeProvider({
   previewThemeId,
 }: ThemeProviderProps) {
   const [themeId, setThemeId] = useState<ThemeId>(() => {
-    const storedThemeId = disableStorage ? undefined : readStoredThemeId();
+    const storedThemeId = isFolioDevPreviewRuntime || disableStorage ? undefined : readStoredThemeId();
     return getThemeById(previewThemeId ?? storedThemeId ?? siteConfig.theme.activeTheme).id;
   });
 
@@ -54,7 +55,7 @@ export function ThemeProvider({
         const nextTheme = getThemeById(nextThemeId);
         setThemeId(nextTheme.id);
 
-        if (!disableStorage && !previewThemeId) {
+        if (!isFolioDevPreviewRuntime && !disableStorage && !previewThemeId) {
           storeThemeId(nextTheme.id);
         }
       },

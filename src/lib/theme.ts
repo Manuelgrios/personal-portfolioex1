@@ -1,10 +1,15 @@
 import type { PortfolioTheme } from "../data/themes";
 
 const storageKey = "portfolio-theme";
+const isFolioDevPreviewRuntime = import.meta.env.VITE_FOLIODEV_PREVIEW_RUNTIME === "true";
 
 export const themeStorageKey = storageKey;
 
 export function canUseBrowserStorage() {
+  if (isFolioDevPreviewRuntime) {
+    return false;
+  }
+
   try {
     return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
   } catch {

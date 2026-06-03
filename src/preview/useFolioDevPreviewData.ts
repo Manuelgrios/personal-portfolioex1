@@ -11,9 +11,15 @@ import {
   type TemplateRuntimeData,
 } from "../data/runtimeData";
 
+const isFolioDevPreviewRuntime = import.meta.env.VITE_FOLIODEV_PREVIEW_RUNTIME === "true";
+
 function isPreviewRoute() {
   if (typeof window === "undefined") {
     return false;
+  }
+
+  if (isFolioDevPreviewRuntime) {
+    return true;
   }
 
   return (
