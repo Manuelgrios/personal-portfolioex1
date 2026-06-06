@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 import {
+  FOLIODEV_TEMPLATE_PREVIEW_CHANNEL_PARAM,
+  FOLIODEV_TEMPLATE_PREVIEW_PARENT_ORIGIN_PARAM,
   createPreviewErrorMessage,
   createPreviewLinkClickMessage,
   createPreviewReadyMessage,
   isFolioDevTemplatePreviewMessage,
+  isValidPreviewChannelId,
   type FolioDevTemplatePreviewLinkClickReason,
 } from "./previewMessages";
 import {
@@ -28,12 +31,36 @@ function isPreviewRoute() {
   );
 }
 
-function postToParent(message: unknown) {
+function getPreviewChannelId() {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  const channelId = new URLSearchParams(window.location.search).get(FOLIODEV_TEMPLATE_PREVIEW_CHANNEL_PARAM);
+  return isValidPreviewChannelId(channelId) ? channelId : "";
+}
+
+function getPreviewParentOrigin() {
+  if (typeof window === "undefined") {
+    return "";
+  }
+
+  const origin = new URLSearchParams(window.location.search).get(FOLIODEV_TEMPLATE_PREVIEW_PARENT_ORIGIN_PARAM) ?? "";
+
+  try {
+    const parsedOrigin = new URL(origin);
+    return parsedOrigin.origin === origin && ["http:", "https:"].includes(parsedOrigin.protocol) ? origin : "";
+  } catch {
+    return "";
+  }
+}
+
+function postToParent(message: unknown, targetOrigin: string) {
   if (typeof window === "undefined" || window.parent === window) {
     return;
   }
 
-  window.parent.postMessage(message, "*");
+  window.parent.postMessage(message, targetOrigin);
 }
 
 function closestAnchor(target: EventTarget | null) {
@@ -91,15 +118,17 @@ function classifyPreviewLink(anchor: HTMLAnchorElement): {
 
 export function useFolioDevPreviewData() {
   const [isPreviewMode] = useState(isPreviewRoute);
+  const [previewChannelId] = useState(getPreviewChannelId);
+  const [previewParentOrigin] = useState(getPreviewParentOrigin);
   const [previewData, setPreviewData] = useState<TemplateRuntimeData | null>(null);
 
   useEffect(() => {
-    if (!isPreviewMode || typeof window === "undefined") {
+    if (!isPreviewMode || typeof window === "undefined" || !previewChannelId || !previewParentOrigin) {
       return;
     }
 
     function handleMessage(event: MessageEvent) {
-      if (!isFolioDevTemplatePreviewMessage(event.data)) {
+      if (!isFolioDevTemplatePreviewMessage(event.data, previewChannelId)) {
         return;
       }
 
@@ -107,20 +136,20 @@ export function useFolioDevPreviewData() {
         setPreviewData(normalizePreviewData(event.data.data));
       } catch (error) {
         const reason = error instanceof Error ? error.message : "Unable to apply preview data.";
-        postToParent(createPreviewErrorMessage(reason));
+        postToParent(createPreviewErrorMessage(previewChannelId, reason), previewParentOrigin);
       }
     }
 
     window.addEventListener("message", handleMessage);
-    postToParent(createPreviewReadyMessage());
+    postToParent(createPreviewReadyMessage(previewChannelId), previewParentOrigin);
 
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, [isPreviewMode]);
+  }, [isPreviewMode, previewChannelId, previewParentOrigin]);
 
   useEffect(() => {
-    if (!isPreviewMode || typeof window === "undefined") {
+    if (!isPreviewMode || typeof window === "undefined" || !previewChannelId || !previewParentOrigin) {
       return;
     }
 
@@ -137,7 +166,7 @@ export function useFolioDevPreviewData() {
       const classification = classifyPreviewLink(anchor);
       const label = anchor.textContent?.trim() || anchor.getAttribute("aria-label") || undefined;
 
-      postToParent(createPreviewLinkClickMessage({ ...classification, label }));
+      postToParent(createPreviewLinkClickMessage({ ...classification, label, channelId: previewChannelId }), previewParentOrigin);
     }
 
     document.addEventListener("click", handlePreviewLinkClick, true);
@@ -145,7 +174,7 @@ export function useFolioDevPreviewData() {
     return () => {
       document.removeEventListener("click", handlePreviewLinkClick, true);
     };
-  }, [isPreviewMode]);
+  }, [isPreviewMode, previewChannelId, previewParentOrigin]);
 
   return { isPreviewMode, previewData };
 }
