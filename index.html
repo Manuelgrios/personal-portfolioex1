@@ -12,306 +12,119 @@
   </head>
   <body>
     <div id="root">
-      <main id="portfolio" data-foliodev-parser-root="true" aria-label="Manuel Garnica personal portfolio">
-        <header data-foliodev-section="profile">
-          <h1>Manuel Garnica</h1>
-          <p data-foliodev-field="headline">Aspiring Full-Stack Software Engineer.</p>
-          <p data-foliodev-field="subtitle">Applied Computing and Data Visualization Student</p>
-          <p data-foliodev-field="location">Seattle, Washington</p>
-          <p data-foliodev-field="email">manuelgarios@outlook.com</p>
-          <p data-foliodev-field="bio">
-            I'm an aspiring software engineer based in Washington with an academic background in Applied Computing and Data Visualization at the University of Washington Bothell. My work focuses on building small but useful software tools, debugging systems, automating workflows, and using data visualization to make technical information easier to understand.
-          </p>
-        </header>
+      <main id="portfolio">
+        <h1>Manuel Garnica</h1>
+        <p>Aspiring Full-Stack Software Engineer.</p>
+        <p>Applied Computing and Data Visualization Student</p>
+        <p>Seattle, Washington</p>
+        <p>Email: manuelgarios@outlook.com</p>
 
-        <section data-foliodev-section="about">
-          <h2>About Me</h2>
-          <p>
-            I'm an aspiring software engineer based in Washington with an academic background in Applied Computing and Data Visualization at the University of Washington Bothell. My work focuses on software tools, debugging, automation, and data visualization, with projects that help me practice writing cleaner code, testing edge cases, and explaining technical decisions clearly.
-          </p>
-          <h3>Technical Focus</h3>
+        <h2>About</h2>
+        <p>
+          I'm an aspiring software engineer based in Washington with an academic background in Applied Computing and Data Visualization at the University of Washington Bothell. My work focuses on building small but useful software tools, debugging systems, automating workflows, and using data visualization to make technical information easier to understand.
+        </p>
+
+        <h2>Education</h2>
+        <ul>
+          <li>University of Washington Bothell — Bachelor of Arts in Applied Computing</li>
+          <li>University of Washington Bothell — Bachelor of Science in Data Visualization</li>
+        </ul>
+
+        <h2>Skills</h2>
+        <ul>
+          <li>Languages: Python, JavaScript, TypeScript, C++, C#</li>
+          <li>Frontend: React, HTML/CSS</li>
+          <li>Tools and Frameworks: Flask, Git, GitHub Actions, Unity</li>
+          <li>Data and Analysis: Data Visualization, Pandas, Matplotlib, Debugging</li>
+        </ul>
+
+        <h2>Projects</h2>
+        <p>Selected projects focused on software tools, automation, debugging, data structures, and data visualization.</p>
+
+        <article class="project" id="chrome-extension-deployment-workflow">
+          <h3>Chrome Extension Deployment Workflow</h3>
           <ul>
-            <li>Software engineering</li>
-            <li>Data visualization</li>
-            <li>Tools and automation</li>
-            <li>Debugging</li>
+            <li>Category: Automation</li>
+            <li>Summary: Designed a GitHub Actions workflow for building, packaging, and preparing a Chrome extension release. The project focused on reducing manual deployment steps and making the release process easier to review.</li>
+            <li>Description: A release workflow project focused on turning a manual Chrome extension deployment path into a repeatable process.</li>
+            <li>Challenge: The extension release process depended on manual build, packaging, and versioning steps that were easy to skip or apply inconsistently.</li>
+            <li>Approach: Separated release behavior into smaller workflow steps so the build path could be reviewed, repeated, and adjusted without relying on memory.</li>
+            <li>Results: Reduced the number of manual release steps by moving the process into a repeatable workflow. Made release behavior easier to audit before publishing.</li>
+            <li>Technologies: JavaScript, GitHub Actions, Semantic Versioning</li>
           </ul>
-          <h3>What I focus on</h3>
+        </article>
+
+        <article class="project" id="unity-mcp-shader-integration">
+          <h3>Unity MCP + Shader Integration</h3>
           <ul>
-            <li>Debugging problems until the cause is clear</li>
-            <li>Building tools that reduce repeated manual work</li>
-            <li>Writing code that is easier to test and update</li>
-            <li>Explaining technical work through clear visuals and documentation</li>
+            <li>Category: Tools</li>
+            <li>Summary: Configured a Unity MCP workflow to inspect scenes, update materials, and test shader changes through external tool calls. The main work was debugging the MCP connection and making shader iteration more repeatable.</li>
+            <li>Description: A Unity tooling project focused on connecting MCP actions to scene inspection, material updates, and shader iteration.</li>
+            <li>Challenge: Unity and MCP needed a reliable connection before external tool calls could inspect scene objects, update materials, or support shader testing.</li>
+            <li>Approach: Debugged startup, dependency, and handshake behavior before validating which Unity actions could be controlled externally.</li>
+            <li>Results: Made shader iteration easier to explain and repeat. Clarified the setup steps needed before MCP actions can control Unity behavior.</li>
+            <li>Technologies: C#, Unity, MCP, Shaders</li>
           </ul>
-        </section>
+        </article>
 
-        <section data-foliodev-section="education">
-          <h2>Education</h2>
-          <article data-foliodev-education>
-            <h3>University of Washington Bothell</h3>
-            <p>Bachelor of Arts in Applied Computing</p>
-          </article>
-          <article data-foliodev-education>
-            <h3>University of Washington Bothell</h3>
-            <p>Bachelor of Science in Data Visualization</p>
-          </article>
-        </section>
-
-        <section data-foliodev-section="skills">
-          <h2>Skills</h2>
-          <h3>Languages</h3>
+        <article class="project" id="flask-login-external-post-debugging">
+          <h3>Flask Login + External POST Debugging</h3>
           <ul>
-            <li>Python</li>
-            <li>JavaScript</li>
-            <li>TypeScript</li>
-            <li>C++</li>
-            <li>C#</li>
+            <li>Category: Backend Debugging</li>
+            <li>Summary: Built a Flask login flow and traced request failures across routes, HTTP methods, form data, and external POST calls. The project focused on separating backend logic errors from endpoint and network configuration issues.</li>
+            <li>Description: A backend debugging project focused on authentication routes, request handling, and external POST behavior.</li>
+            <li>Challenge: The backend needed clearer debugging around GET and POST behavior, form data, external POST requests, and HTTP versus HTTPS or port mismatches.</li>
+            <li>Approach: Read route behavior and logs separately from endpoint configuration so 404, 500, SSL, and request-formatting errors could be diagnosed in the right layer.</li>
+            <li>Results: Made the debugging process easier by separating routing, request formatting, and endpoint configuration issues. Clarified when failures came from backend logic versus network or URL configuration.</li>
+            <li>Technologies: Python, Flask, MySQL, ngrok</li>
           </ul>
-          <h3>Frontend</h3>
+        </article>
+
+        <article class="project" id="sorted-linked-list-dynamic-memory">
+          <h3>Sorted Linked List with Dynamic Memory</h3>
           <ul>
-            <li>React</li>
-            <li>HTML/CSS</li>
+            <li>Category: Data Structures</li>
+            <li>Summary: Implemented a sorted C++ linked list with deep-copy ownership, duplicate rejection, and an O(n+m) merge path using pointer splicing. Testing focused on memory safety, sorted order, and edge-case behavior.</li>
+            <li>Description: A C++ data structures project focused on manual ownership, sorted insertion, and safe linked-list operations.</li>
+            <li>Challenge: The data structure needed sorted insert behavior, duplicate rejection, deep-copy ownership, and safe cleanup without relying on container abstractions.</li>
+            <li>Approach: Implemented ownership behavior directly, including the Rule of Three, then tested sorted order and edge cases where pointer mistakes are most likely.</li>
+            <li>Results: Validated memory behavior with targeted tests and sanitizer-style checks. Kept merge behavior linear by splicing existing nodes instead of rebuilding the list.</li>
+            <li>Technologies: C++, Data Structures, Pointers, Memory Safety</li>
           </ul>
-          <h3>Tools and Frameworks</h3>
+        </article>
+
+        <article class="project" id="apple-developer-hiring-research">
+          <h3>Apple Developer Hiring Research</h3>
           <ul>
-            <li>Flask</li>
-            <li>Git</li>
-            <li>GitHub Actions</li>
-            <li>Unity</li>
+            <li>Category: Research</li>
+            <li>Summary: Analyzed Apple's developer hiring process, including interview structure, compensation signals, work expectations, and fairness concerns. The research organized scattered hiring information into practical candidate guidance.</li>
+            <li>Description: A research project focused on organizing public hiring information into practical guidance for developer candidates.</li>
+            <li>Challenge: Information about developer hiring can be scattered across job posts, interview reports, compensation discussions, and candidate advice.</li>
+            <li>Approach: Grouped research by hiring stage and topic so candidate preparation advice could be separated from speculation or unsupported claims.</li>
+            <li>Results: Organized scattered hiring information into practical candidate guidance. Organized the research around interview structure, work expectations, compensation signals, and fairness considerations.</li>
+            <li>Technologies: Research, Technical Interviews, Career Analysis</li>
           </ul>
-          <h3>Data and Analysis</h3>
+        </article>
+
+        <article class="project" id="data-visualization-portfolio-direction">
+          <h3>Data Visualization Portfolio Direction</h3>
           <ul>
-            <li>Data Visualization</li>
-            <li>Pandas</li>
-            <li>Matplotlib</li>
-            <li>Debugging</li>
+            <li>Category: Data Visualization</li>
+            <li>Summary: Defined the structure for a data visualization portfolio focused on readable charts, clear metrics, and practical analysis. The goal was to frame future projects around decisions, not just visuals.</li>
+            <li>Description: A planning project that defines how future data visualization work should be selected, structured, and explained.</li>
+            <li>Challenge: Future analytics work needed a consistent structure for choosing datasets, selecting chart types, and explaining what each visualization helps someone decide.</li>
+            <li>Approach: Framed future projects around decisions and analysis questions before choosing visuals, so charts support an explanation instead of acting as decoration.</li>
+            <li>Results: Created a direction for portfolio projects centered on readable charts and clear metrics. Established a practical structure for explaining what each visualization helps evaluate.</li>
+            <li>Technologies: Python, Data Visualization, Pandas, Matplotlib</li>
           </ul>
-        </section>
+        </article>
 
-        <section id="projects" data-foliodev-section="projects">
-          <h2>Projects</h2>
-          <p>Selected projects focused on software tools, automation, debugging, data structures, and data visualization.</p>
-
-          <article data-foliodev-project data-project-slug="chrome-extension-deployment-workflow">
-            <h3>Chrome Extension Deployment Workflow</h3>
-            <p data-foliodev-field="category">Automation</p>
-            <p data-foliodev-field="summary">Designed a GitHub Actions workflow for building, packaging, and preparing a Chrome extension release. The project focused on reducing manual deployment steps and making the release process easier to review.</p>
-            <p data-foliodev-field="description">A release workflow project focused on turning a manual Chrome extension deployment path into a repeatable process.</p>
-            <h4>Overview</h4>
-            <p>Designed a GitHub Actions workflow for a Chrome extension build process, with versioning, packaging, and deployment checks separated into repeatable steps.</p>
-            <h4>Challenge</h4>
-            <p>The extension release process depended on manual build, packaging, and versioning steps that were easy to skip or apply inconsistently.</p>
-            <h4>Approach</h4>
-            <p>Separated release behavior into smaller workflow steps so the build path could be reviewed, repeated, and adjusted without relying on memory.</p>
-            <h4>Workflow</h4>
-            <ul>
-              <li>Prepare extension build artifacts</li>
-              <li>Run packaging checks</li>
-              <li>Keep versioning and release preparation visible in the workflow</li>
-            </ul>
-            <h4>Results</h4>
-            <ul>
-              <li>Reduced the number of manual release steps by moving the process into a repeatable workflow.</li>
-              <li>Made release behavior easier to audit before publishing.</li>
-            </ul>
-            <h4>Technologies</h4>
-            <ul>
-              <li>JavaScript</li>
-              <li>GitHub Actions</li>
-              <li>Semantic Versioning</li>
-            </ul>
-            <h4>Interview Talking Points</h4>
-            <ul>
-              <li>Why deployment steps should be separated and named clearly</li>
-              <li>How CI workflows reduce release mistakes</li>
-              <li>What should be checked before packaging a browser extension</li>
-            </ul>
-          </article>
-
-          <article data-foliodev-project data-project-slug="unity-mcp-shader-integration">
-            <h3>Unity MCP + Shader Integration</h3>
-            <p data-foliodev-field="category">Tools</p>
-            <p data-foliodev-field="summary">Configured a Unity MCP workflow to inspect scenes, update materials, and test shader changes through external tool calls. The main work was debugging the MCP connection and making shader iteration more repeatable.</p>
-            <p data-foliodev-field="description">A Unity tooling project focused on connecting MCP actions to scene inspection, material updates, and shader iteration.</p>
-            <h4>Overview</h4>
-            <p>Configured a Unity MCP workflow to inspect scenes, update materials, and test shader changes through external tool calls.</p>
-            <h4>Challenge</h4>
-            <p>Unity and MCP needed a reliable connection before external tool calls could inspect scene objects, update materials, or support shader testing.</p>
-            <h4>Approach</h4>
-            <p>Debugged startup, dependency, and handshake behavior before validating which Unity actions could be controlled externally.</p>
-            <h4>Workflow</h4>
-            <ul>
-              <li>Start and verify the MCP connection</li>
-              <li>Inspect available Unity scene and material actions</li>
-              <li>Update materials and test shader changes through tool calls</li>
-            </ul>
-            <h4>Results</h4>
-            <ul>
-              <li>Made shader iteration easier to explain and repeat.</li>
-              <li>Clarified the setup steps needed before MCP actions can control Unity behavior.</li>
-            </ul>
-            <h4>Technologies</h4>
-            <ul>
-              <li>C#</li>
-              <li>Unity</li>
-              <li>MCP</li>
-              <li>Shaders</li>
-            </ul>
-            <h4>Interview Talking Points</h4>
-            <ul>
-              <li>How external tool calls can fit into a game-engine workflow</li>
-              <li>How to debug startup and connection issues</li>
-              <li>Why repeatable shader iteration matters during experimentation</li>
-            </ul>
-          </article>
-
-          <article data-foliodev-project data-project-slug="flask-login-external-post-debugging">
-            <h3>Flask Login + External POST Debugging</h3>
-            <p data-foliodev-field="category">Backend Debugging</p>
-            <p data-foliodev-field="summary">Built a Flask login flow and traced request failures across routes, HTTP methods, form data, and external POST calls. The project focused on separating backend logic errors from endpoint and network configuration issues.</p>
-            <p data-foliodev-field="description">A backend debugging project focused on authentication routes, request handling, and external POST behavior.</p>
-            <h4>Overview</h4>
-            <p>Built a Flask login flow and traced request failures across routes, HTTP methods, form data, and external POST calls.</p>
-            <h4>Challenge</h4>
-            <p>The backend needed clearer debugging around GET and POST behavior, form data, external POST requests, and HTTP versus HTTPS or port mismatches.</p>
-            <h4>Approach</h4>
-            <p>Read route behavior and logs separately from endpoint configuration so 404, 500, SSL, and request-formatting errors could be diagnosed in the right layer.</p>
-            <h4>Features</h4>
-            <ul>
-              <li>Flask route handling</li>
-              <li>Login form processing</li>
-              <li>External POST request testing</li>
-              <li>Local endpoint exposure through ngrok</li>
-            </ul>
-            <h4>Results</h4>
-            <ul>
-              <li>Made the debugging process easier by separating routing, request formatting, and endpoint configuration issues.</li>
-              <li>Clarified when failures came from backend logic versus network or URL configuration.</li>
-            </ul>
-            <h4>Technologies</h4>
-            <ul>
-              <li>Python</li>
-              <li>Flask</li>
-              <li>MySQL</li>
-              <li>ngrok</li>
-            </ul>
-            <h4>Interview Talking Points</h4>
-            <ul>
-              <li>How to debug HTTP method mismatches</li>
-              <li>How logs help separate 404, 500, and SSL issues</li>
-              <li>Why local tunneling changes endpoint assumptions</li>
-            </ul>
-          </article>
-
-          <article data-foliodev-project data-project-slug="sorted-linked-list-dynamic-memory">
-            <h3>Sorted Linked List with Dynamic Memory</h3>
-            <p data-foliodev-field="category">Data Structures</p>
-            <p data-foliodev-field="summary">Implemented a sorted C++ linked list with deep-copy ownership, duplicate rejection, and an O(n+m) merge path using pointer splicing. Testing focused on memory safety, sorted order, and edge-case behavior.</p>
-            <p data-foliodev-field="description">A C++ data structures project focused on manual ownership, sorted insertion, and safe linked-list operations.</p>
-            <h4>Overview</h4>
-            <p>Implemented a sorted C++ linked list with deep-copy ownership, duplicate rejection, and an O(n+m) merge path using pointer splicing.</p>
-            <h4>Challenge</h4>
-            <p>The data structure needed sorted insert behavior, duplicate rejection, deep-copy ownership, and safe cleanup without relying on container abstractions.</p>
-            <h4>Approach</h4>
-            <p>Implemented ownership behavior directly, including the Rule of Three, then tested sorted order and edge cases where pointer mistakes are most likely.</p>
-            <h4>Features</h4>
-            <ul>
-              <li>Sorted insertion</li>
-              <li>Duplicate rejection</li>
-              <li>Deep copy ownership</li>
-              <li>O(n+m) merge by pointer splicing</li>
-            </ul>
-            <h4>Results</h4>
-            <ul>
-              <li>Validated memory behavior with targeted tests and sanitizer-style checks.</li>
-              <li>Kept merge behavior linear by splicing existing nodes instead of rebuilding the list.</li>
-            </ul>
-            <h4>Technologies</h4>
-            <ul>
-              <li>C++</li>
-              <li>Data Structures</li>
-              <li>Pointers</li>
-              <li>Memory Safety</li>
-            </ul>
-            <h4>Interview Talking Points</h4>
-            <ul>
-              <li>Why the Rule of Three matters for owning raw pointers</li>
-              <li>How pointer splicing changes merge complexity</li>
-              <li>How to test edge cases in linked structures</li>
-            </ul>
-          </article>
-
-          <article data-foliodev-project data-project-slug="apple-developer-hiring-research">
-            <h3>Apple Developer Hiring Research</h3>
-            <p data-foliodev-field="category">Research</p>
-            <p data-foliodev-field="summary">Analyzed Apple's developer hiring process, including interview structure, compensation signals, work expectations, and fairness concerns. The research organized scattered hiring information into practical candidate guidance.</p>
-            <p data-foliodev-field="description">A research project focused on organizing public hiring information into practical guidance for developer candidates.</p>
-            <h4>Overview</h4>
-            <p>Analyzed Apple's developer hiring process, including interview structure, compensation signals, work expectations, and fairness concerns.</p>
-            <h4>Challenge</h4>
-            <p>Information about developer hiring can be scattered across job posts, interview reports, compensation discussions, and candidate advice.</p>
-            <h4>Approach</h4>
-            <p>Grouped research by hiring stage and topic so candidate preparation advice could be separated from speculation or unsupported claims.</p>
-            <h4>Results</h4>
-            <ul>
-              <li>Organized scattered hiring information into practical candidate guidance.</li>
-              <li>Organized the research around interview structure, work expectations, compensation signals, and fairness considerations.</li>
-            </ul>
-            <h4>Technologies</h4>
-            <ul>
-              <li>Research</li>
-              <li>Technical Interviews</li>
-              <li>Career Analysis</li>
-            </ul>
-            <h4>Interview Talking Points</h4>
-            <ul>
-              <li>How to evaluate hiring information from mixed sources</li>
-              <li>How fairness concerns affect candidate preparation</li>
-              <li>Why research findings should be separated from personal advice</li>
-            </ul>
-          </article>
-
-          <article data-foliodev-project data-project-slug="data-visualization-portfolio-direction">
-            <h3>Data Visualization Portfolio Direction</h3>
-            <p data-foliodev-field="category">Data Visualization</p>
-            <p data-foliodev-field="summary">Defined the structure for a data visualization portfolio focused on readable charts, clear metrics, and practical analysis. The goal was to frame future projects around decisions, not just visuals.</p>
-            <p data-foliodev-field="description">A planning project that defines how future data visualization work should be selected, structured, and explained.</p>
-            <h4>Overview</h4>
-            <p>Defined the structure for a data visualization portfolio focused on readable charts, clear metrics, and practical analysis.</p>
-            <h4>Challenge</h4>
-            <p>Future analytics work needed a consistent structure for choosing datasets, selecting chart types, and explaining what each visualization helps someone decide.</p>
-            <h4>Approach</h4>
-            <p>Framed future projects around decisions and analysis questions before choosing visuals, so charts support an explanation instead of acting as decoration.</p>
-            <h4>Results</h4>
-            <ul>
-              <li>Created a direction for portfolio projects centered on readable charts and clear metrics.</li>
-              <li>Established a practical structure for explaining what each visualization helps evaluate.</li>
-            </ul>
-            <h4>Technologies</h4>
-            <ul>
-              <li>Python</li>
-              <li>Data Visualization</li>
-              <li>Pandas</li>
-              <li>Matplotlib</li>
-            </ul>
-            <h4>Interview Talking Points</h4>
-            <ul>
-              <li>How to choose chart types based on the question being answered</li>
-              <li>Why readable visuals matter more than decorative complexity</li>
-              <li>How to connect visualizations to decisions</li>
-            </ul>
-          </article>
-        </section>
-
-        <section data-foliodev-section="contact">
-          <h2>Contact</h2>
-          <p>I'm open to internships, project collaboration, and technical work involving software tools, automation, debugging, or data visualization.</p>
-          <ul>
-            <li><a href="mailto:manuelgarios@outlook.com">manuelgarios@outlook.com</a></li>
-            <li><a href="https://www.linkedin.com/in/manuel-garnica-122233252/">linkedin.com/in/manuel-garnica-122233252</a></li>
-            <li><a href="https://github.com/Manuelgrios">github.com/Manuelgrios</a></li>
-          </ul>
-        </section>
+        <h2>Contact</h2>
+        <ul>
+          <li>Email: manuelgarios@outlook.com</li>
+          <li>LinkedIn: https://www.linkedin.com/in/manuel-garnica-122233252/</li>
+          <li>GitHub: https://github.com/Manuelgrios</li>
+        </ul>
       </main>
     </div>
     <script type="module" src="/src/main.tsx"></script>
