@@ -179,6 +179,19 @@ assert(
 const noNav = normalizePreviewData(emptyPreview({ navigation: [] }));
 assert(noNav.navigationItems.length === 0, "no static navigation added when FolioDev sent none");
 
+// Enterprise gradient theme flows through strict normalization and does not revive static content.
+const enterprise = normalizePreviewData(
+  emptyPreview({ siteConfig: { brand: {}, theme: { activeTheme: "enterprise-gradient" }, resume: {} } }),
+);
+assert(
+  enterprise.siteConfig.theme.activeTheme === "enterprise-gradient",
+  "enterprise-gradient theme id passes through normalization",
+);
+assert(
+  enterprise.projects.length === 0 && enterprise.skillItems.length === 0 && enterprise.socialLinks.length === 0,
+  "empty user data stays empty with enterprise-gradient selected",
+);
+
 if (failures > 0) {
   console.error(`\nFolioDev strict preview normalization proof FAILED with ${failures} assertion(s).`);
   process.exit(1);
