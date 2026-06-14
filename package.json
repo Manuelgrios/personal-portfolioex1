@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build && node scripts/copy-404.mjs",
     "lint": "eslint .",
-    "proof": "node scripts/foliodev-runtime-proof.mjs",
+    "proof": "node scripts/foliodev-runtime-proof.mjs && node scripts/foliodev-ready-retry-proof.mjs",
     "preview": "npm run build && wrangler dev",
     "deploy": "npm run build && wrangler deploy"
   },

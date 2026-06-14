@@ -12,6 +12,7 @@ import {
   normalizePreviewData,
   type TemplateRuntimeData,
 } from "../data/previewNormalization";
+import { startFolioDevPreviewReadyRetry } from "./previewReadyRetry";
 
 function isPreviewRoute() {
   if (typeof window === "undefined") {
@@ -119,18 +120,15 @@ export function useFolioDevPreviewData() {
     }
 
     const connection = previewConnection;
-    let hasReceivedPreviewUpdate = false;
-    const readyResendDelays = [0, 80, 240, 720, 1600];
-    const readyTimers = readyResendDelays.map((delay) =>
-      window.setTimeout(() => {
-        if (!hasReceivedPreviewUpdate) {
-          postToParent(
-            createPreviewReadyMessage(connection.channelId),
-            connection.parentOrigin,
-          );
-        }
-      }, delay),
-    );
+    const readyRetry = startFolioDevPreviewReadyRetry({
+      postReady: () =>
+        postToParent(
+          createPreviewReadyMessage(connection.channelId),
+          connection.parentOrigin,
+        ),
+      setTimer: window.setTimeout.bind(window),
+      clearTimer: window.clearTimeout.bind(window),
+    });
 
     function handleMessage(event: MessageEvent) {
       if (
@@ -141,7 +139,7 @@ export function useFolioDevPreviewData() {
       }
 
       try {
-        hasReceivedPreviewUpdate = true;
+        readyRetry.stop();
         setPreviewData(normalizePreviewData(event.data.data));
       } catch (error) {
         const reason = error instanceof Error ? error.message : "Unable to apply preview data.";
@@ -155,7 +153,7 @@ export function useFolioDevPreviewData() {
     window.addEventListener("message", handleMessage);
 
     return () => {
-      readyTimers.forEach((timer) => window.clearTimeout(timer));
+      readyRetry.stop();
       window.removeEventListener("message", handleMessage);
     };
   }, [isPreviewMode, previewConnection]);
