@@ -116,6 +116,14 @@ assert(empty.profile.hero.headline.length === 0, "empty hero headline -> []");
 assert(empty.profile.hero.image.src === "", "empty hero image -> no image");
 assert(empty.profile.hero.primaryCta.href === "" && empty.profile.hero.secondaryCta.href === "", "empty CTAs -> no buttons");
 
+// Editor placeholders: FolioDev preview enables the display-only placeholder layer, but the flag must
+// never mutate the strict empty data above (the placeholders live only in Home.tsx rendering).
+assert(empty.editorPlaceholders === true, "FolioDev preview enables editorPlaceholders for empty data");
+assert(
+  empty.projects.length === 0 && empty.skillItems.length === 0 && empty.profile.hero.headline.length === 0,
+  "editorPlaceholders flag does not create real projects/skills/name data",
+);
+
 // 12 (no static revival). Static demo content is NOT revived for empty FolioDev data.
 assert(staticProjects.length > 0 && empty.projects.length === 0, "static demo projects exist but are not revived");
 assert(staticSkillItems.length > 0 && empty.skillItems.length === 0, "static demo skills exist but are not revived");

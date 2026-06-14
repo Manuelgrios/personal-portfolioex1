@@ -24,6 +24,8 @@ const staticRuntimeData: TemplateRuntimeData = {
   education: staticEducation,
   socialLinks: staticSocialLinks,
   navigationItems: staticNavigationItems,
+  // Standalone and published runtimes never show editor placeholders.
+  editorPlaceholders: false,
 };
 
 const RuntimeDataContext = createContext<TemplateRuntimeData>(staticRuntimeData);

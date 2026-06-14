@@ -11,10 +11,13 @@ import { getIcon } from "../lib/icons";
 
 export function Home() {
   const { currentTheme } = useTheme();
-  const { profile, projects, experience, skillItems, socialLinks } = useRuntimeData();
+  const { profile, projects, experience, skillItems, socialLinks, editorPlaceholders } = useRuntimeData();
   const featuredProjects = projects
     .filter((project) => project.featured)
     .slice(0, 6);
+  // Editor-only placeholders fill empty required fields in FolioDev workspace preview. They are display
+  // hints, never real data: raw runtime values stay empty, nothing here is saved, published, or counted.
+  const hasHeroHeadline = profile.hero.headline.length > 0;
   const imageTreatment = currentTheme.imageTreatment;
 
   return (
@@ -22,23 +25,47 @@ export function Home() {
       <section className="grid min-h-[650px] gap-8 overflow-hidden pt-10 md:min-h-[700px] md:pt-8 lg:min-h-[735px] lg:grid-cols-[1fr_0.95fr] lg:items-center">
         <div className="relative z-20 pb-6 lg:pb-24">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
-            {profile.hero.eyebrow}
+            {profile.hero.eyebrow || (editorPlaceholders ? "Your headline" : "")}
           </p>
           <h1 className="mt-6 max-w-[760px] text-4xl font-black leading-[1.04] tracking-normal text-text sm:text-5xl md:text-[3.55rem] xl:text-[4rem]">
-            {profile.hero.headline.map((line) => (
+            {hasHeroHeadline ? (
+              profile.hero.headline.map((line) => (
+                <span
+                  className="block whitespace-normal break-words lg:whitespace-nowrap"
+                  key={line}
+                >
+                  {line}
+                </span>
+              ))
+            ) : editorPlaceholders ? (
               <span
-                className="block whitespace-normal break-words lg:whitespace-nowrap"
-                key={line}
+                className="block whitespace-normal break-words text-muted/70 lg:whitespace-nowrap"
+                data-editor-placeholder="name"
               >
-                {line}
+                Your name
               </span>
-            ))}
-            <span className="block whitespace-normal break-words text-accent-dark lg:whitespace-nowrap">
-              {profile.hero.highlightedHeadline}
-            </span>
+            ) : null}
+            {profile.hero.highlightedHeadline ? (
+              <span className="block whitespace-normal break-words text-accent-dark lg:whitespace-nowrap">
+                {profile.hero.highlightedHeadline}
+              </span>
+            ) : editorPlaceholders ? (
+              <span
+                className="block whitespace-normal break-words text-accent-dark/70 lg:whitespace-nowrap"
+                data-editor-placeholder="headline"
+              >
+                Target role or headline
+              </span>
+            ) : null}
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-8 text-muted">
-            {profile.hero.body}
+            {profile.hero.body ? (
+              profile.hero.body
+            ) : editorPlaceholders ? (
+              <span className="opacity-70" data-editor-placeholder="intro">
+                Short introduction will appear here.
+              </span>
+            ) : null}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             {profile.hero.primaryCta.href ? (
@@ -117,9 +144,13 @@ export function Home() {
             </h2>
             <div className="mt-4 h-px w-12 bg-accent-dark" />
             <div className="mt-6 max-w-2xl space-y-4 text-base leading-8 text-muted">
-              {profile.sections.about.body.map((paragraph) => (
-                <p key={paragraph}>{paragraph}</p>
-              ))}
+              {profile.sections.about.body.length > 0 ? (
+                profile.sections.about.body.map((paragraph) => <p key={paragraph}>{paragraph}</p>)
+              ) : editorPlaceholders ? (
+                <p className="opacity-70" data-editor-placeholder="about">
+                  Add a short introduction about yourself, your focus, and what you are building.
+                </p>
+              ) : null}
             </div>
           </div>
 
@@ -278,6 +309,19 @@ export function Home() {
           </div>
         ) : null}
       </Card>
+      ) : editorPlaceholders ? (
+        <Card id="projects" className="scroll-mt-24 p-6 md:p-7" data-editor-placeholder="projects">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
+            {profile.sections.projects.eyebrow}
+          </p>
+          <h2 className="mt-2 text-3xl font-bold text-text">{profile.sections.projects.heading}</h2>
+          <div className="mt-7 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            <div className="h-full rounded-xl border border-dashed border-accent-dark/45 bg-card-soft/30 p-4 opacity-70">
+              <h3 className="text-lg font-bold leading-snug text-text">Add a project</h3>
+              <p className="mt-3 text-sm leading-6 text-muted">Project description will appear here.</p>
+            </div>
+          </div>
+        </Card>
       ) : null}
 
       <Card id="skills" className="scroll-mt-24 p-6 md:p-7">
@@ -305,6 +349,20 @@ export function Home() {
                 <span className="text-xs font-medium text-text">
                   {skill.name}
                 </span>
+              </div>
+            ))}
+          </div>
+        ) : editorPlaceholders ? (
+          <div
+            className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4"
+            data-editor-placeholder="skills"
+          >
+            {["Add a skill group", "List your skills"].map((label) => (
+              <div
+                key={label}
+                className="flex min-h-20 items-center justify-center rounded-lg border border-dashed border-accent-dark/45 bg-background/24 px-3 py-3 text-center text-xs font-medium text-muted opacity-70"
+              >
+                {label}
               </div>
             ))}
           </div>

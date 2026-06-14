@@ -64,6 +64,13 @@ export type TemplateRuntimeData = {
   education: EducationItem[];
   socialLinks: SocialLink[];
   navigationItems: NavigationItem[];
+  /**
+   * Editor-only flag: true only in FolioDev workspace preview (normalizePreviewData). It lets the
+   * template render neutral display-only placeholders for empty required fields. It never affects the
+   * real data above (which stays strictly empty), is never set on the standalone or published runtime,
+   * and is never serialized into generated portfolio files.
+   */
+  editorPlaceholders: boolean;
 };
 
 function isRecord(value: unknown): value is RecordLike {
@@ -599,5 +606,8 @@ export function normalizePreviewData(data: FolioDevTemplatePreviewData): Templat
     navigationItems: normalizeNavigation(data.navigation, {
       hasExperience: experience.length > 0,
     }),
+    // FolioDev workspace preview: enable editor-only placeholders for empty required fields. This is a
+    // display hint only; the normalized data above remains strictly empty.
+    editorPlaceholders: true,
   };
 }
