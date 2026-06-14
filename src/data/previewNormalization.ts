@@ -573,7 +573,7 @@ function normalizeNavigation(
   return options.hasExperience && !mapped.some((item) => item.href.toLowerCase() === "/#experience")
     ? mapped.length > 0
       ? [mapped[0], experienceItem, ...mapped.slice(1)]
-      : mapped
+      : [experienceItem]
     : mapped;
 }
 

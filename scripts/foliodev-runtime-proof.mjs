@@ -93,6 +93,10 @@ function emptyPreview(overrides = {}) {
   };
 }
 
+function navLabels(runtimeData) {
+  return runtimeData.navigationItems.map((item) => item.label).join(",");
+}
+
 console.log("FolioDev strict preview normalization proof");
 
 // 2-6, 11. Empty FolioDev payload renders nothing static.
@@ -152,11 +156,79 @@ assert(validEducation.education.length === 1, "valid education kept");
 assert(normalizePreviewData(emptyPreview({ experience: [] })).experience.length === 0, "empty experience -> []");
 const malformedExperience = normalizePreviewData(emptyPreview({ experience: [{ title: "Engineer" }] }));
 assert(malformedExperience.experience.length === 0, "malformed experience dropped");
+assert(
+  !malformedExperience.navigationItems.some((item) => item.href === "/#experience"),
+  "malformed experience keeps Experience nav hidden",
+);
+
+const validExperienceEntry = {
+  title: "Software Intern",
+  organization: "Example Labs",
+  description: "Built accessible components.",
+};
+
+const noExperienceEmptyNav = normalizePreviewData(emptyPreview({ experience: [], navigation: [] }));
+assert(noExperienceEmptyNav.navigationItems.length === 0, "hasExperience false + empty navigation -> []");
+
+const validExperienceEmptyNav = normalizePreviewData(
+  emptyPreview({ experience: [validExperienceEntry], navigation: [] }),
+);
+assert(
+  navLabels(validExperienceEmptyNav) === "Experience",
+  "hasExperience true + empty navigation -> [Experience]",
+);
+
+const validExperienceInsertedNav = normalizePreviewData(
+  emptyPreview({
+    experience: [validExperienceEntry],
+    navigation: [
+      { label: "About", href: "/#about", enabled: true },
+      { label: "Projects", href: "/#projects", enabled: true },
+    ],
+  }),
+);
+assert(
+  navLabels(validExperienceInsertedNav) === "About,Experience,Projects",
+  "hasExperience true + [About, Projects] -> [About, Experience, Projects]",
+);
+
+const noExperienceWithExperienceNav = normalizePreviewData(
+  emptyPreview({
+    experience: [],
+    navigation: [
+      { label: "Experience", href: "/#experience", enabled: true },
+      { label: "About", href: "/#about", enabled: true },
+    ],
+  }),
+);
+assert(
+  navLabels(noExperienceWithExperienceNav) === "About",
+  "hasExperience false + navigation containing Experience removes Experience",
+);
+
+const validExperienceMalformedNav = normalizePreviewData(
+  emptyPreview({ experience: [validExperienceEntry], navigation: ["bad", null] }),
+);
+assert(
+  navLabels(validExperienceMalformedNav) === "Experience",
+  "hasExperience true + malformed navigation -> [Experience]",
+);
+
+const validExperienceDisabledNav = normalizePreviewData(
+  emptyPreview({
+    experience: [validExperienceEntry],
+    navigation: [{ label: "Experience", href: "/#experience", enabled: false }],
+  }),
+);
+assert(
+  navLabels(validExperienceDisabledNav) === "Experience",
+  "hasExperience true + disabled Experience nav still shows Experience",
+);
 
 // 9, 11. Valid experience renders, Experience nav present; FolioDev nav owns the rest.
 const validExperience = normalizePreviewData(
   emptyPreview({
-    experience: [{ title: "Software Intern", organization: "Example Labs", description: "Built accessible components." }],
+    experience: [validExperienceEntry],
     navigation: [
       { label: "About", href: "/#about", enabled: true },
       { label: "Experience", href: "/#experience", enabled: true },
