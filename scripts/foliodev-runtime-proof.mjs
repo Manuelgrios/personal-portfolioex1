@@ -53,6 +53,7 @@ for (const relPath of [
   "data/siteConfig.ts",
   "data/skills.ts",
   "data/socialLinks.ts",
+  "data/themes.ts",
   "preview/previewMessages.ts",
   "data/previewNormalization.ts",
 ]) {
@@ -179,17 +180,17 @@ assert(
 const noNav = normalizePreviewData(emptyPreview({ navigation: [] }));
 assert(noNav.navigationItems.length === 0, "no static navigation added when FolioDev sent none");
 
-// Enterprise gradient theme flows through strict normalization and does not revive static content.
-const enterprise = normalizePreviewData(
+// Stale or unsupported themes fall back to the supported default and do not revive static content.
+const staleTheme = normalizePreviewData(
   emptyPreview({ siteConfig: { brand: {}, theme: { activeTheme: "enterprise-gradient" }, resume: {} } }),
 );
 assert(
-  enterprise.siteConfig.theme.activeTheme === "enterprise-gradient",
-  "enterprise-gradient theme id passes through normalization",
+  staleTheme.siteConfig.theme.activeTheme === "midnight-blue",
+  "stale enterprise-gradient theme id falls back to midnight-blue",
 );
 assert(
-  enterprise.projects.length === 0 && enterprise.skillItems.length === 0 && enterprise.socialLinks.length === 0,
-  "empty user data stays empty with enterprise-gradient selected",
+  staleTheme.projects.length === 0 && staleTheme.skillItems.length === 0 && staleTheme.socialLinks.length === 0,
+  "empty user data stays empty with stale theme selected",
 );
 
 if (failures > 0) {

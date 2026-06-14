@@ -4,8 +4,7 @@ export type ThemeId =
   | "data-slate"
   | "graphite-azure"
   | "violet-grid"
-  | "clean-light-professional"
-  | "enterprise-gradient";
+  | "clean-light-professional";
 
 export type ThemeTokens = {
   background: string;
@@ -226,37 +225,6 @@ export const themes: PortfolioTheme[] = [
       shadow: "0 20px 70px rgba(15, 23, 42, 0.18)",
       backgroundWash:
         "radial-gradient(circle at 50% 58%, rgba(37, 99, 235, 0.08) 0%, transparent 70%)",
-    },
-  },
-  {
-    id: "enterprise-gradient",
-    name: "Enterprise Gradient",
-    description: "A bold enterprise gradient flowing from deep navy through indigo to violet.",
-    tokens: {
-      background: "#0a0f24",
-      backgroundSoft: "#141a3a",
-      card: "#121a3a",
-      cardHover: "#1b2350",
-      border: "#2e3566",
-      borderStrong: "#6366f1",
-      text: "#f5f7ff",
-      mutedText: "#a9b1d6",
-      accent: "#818cf8",
-      accentSoft: "#6366f1",
-      accentGlow: "rgba(99, 102, 241, 0.30)",
-      grid: "rgba(129, 140, 248, 0.05)",
-      buttonPrimary: "#4f46e5",
-      buttonPrimaryHover: "#6366f1",
-      buttonSecondary: "rgba(10, 15, 36, 0.5)",
-      focusRing: "rgba(129, 140, 248, 0.5)",
-    },
-    imageTreatment: {
-      filter: "brightness(1.02) contrast(1.05) saturate(1.05)",
-      glow:
-        "radial-gradient(circle at 50% 52%, rgba(99, 102, 241, 0.50) 0%, rgba(79, 70, 229, 0.26) 34%, rgba(15, 23, 42, 0.10) 58%, transparent 74%)",
-      shadow: "0 0 116px rgba(99, 102, 241, 0.32)",
-      backgroundWash:
-        "radial-gradient(circle at 50% 58%, rgba(129, 140, 248, 0.16) 0%, transparent 70%)",
     },
   },
 ];

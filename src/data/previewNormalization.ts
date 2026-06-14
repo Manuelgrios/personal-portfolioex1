@@ -6,6 +6,7 @@ import { type Project, type ProjectLink } from "./projects";
 import { siteConfig as staticSiteConfig } from "./siteConfig";
 import { type SkillCategory, type SkillItem } from "./skills";
 import { type SocialLink } from "./socialLinks";
+import { getThemeById } from "./themes";
 import type { FolioDevTemplatePreviewData } from "../preview/previewMessages";
 
 /**
@@ -237,6 +238,7 @@ function normalizeSiteConfig(value: unknown): RuntimeSiteConfig {
   const resumePath = normalizeUrl(resume.path);
   const brandName = text(brand.name);
   const brandInitials = text(brand.initials);
+  const selectedTheme = getThemeById(text(theme.activeTheme) || staticSiteConfig.theme.activeTheme);
 
   return {
     // Document title / SEO description / copyright / theme are harmless chrome and may keep a safe default.
@@ -253,8 +255,8 @@ function normalizeSiteConfig(value: unknown): RuntimeSiteConfig {
       logoText: text(brand.logoText) || brandInitials,
     },
     theme: {
-      activeTheme: text(theme.activeTheme) || staticSiteConfig.theme.activeTheme,
-      name: text(theme.name) || staticSiteConfig.theme.name,
+      activeTheme: selectedTheme.id,
+      name: selectedTheme.name,
       sectionLabelStyle:
         text(theme.sectionLabelStyle) || staticSiteConfig.theme.sectionLabelStyle,
     },
