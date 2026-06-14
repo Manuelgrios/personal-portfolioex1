@@ -41,17 +41,25 @@ async function emit(relPath) {
   await fs.writeFile(outPath, transpile(source));
 }
 
-for (const relPath of ["preview/previewMessages.ts", "preview/previewReadyRetry.ts"]) {
+for (const relPath of ["preview/previewMessages.ts", "preview/previewActivation.ts", "preview/previewReadyRetry.ts"]) {
   await emit(relPath);
 }
 
 const messagesModule = await import(pathToFileURL(path.join(tempRoot, "preview", "previewMessages.js")).href);
+const activationModule = await import(pathToFileURL(path.join(tempRoot, "preview", "previewActivation.js")).href);
 const retryModule = await import(pathToFileURL(path.join(tempRoot, "preview", "previewReadyRetry.js")).href);
 
 const {
   createPreviewReadyMessage,
   isFolioDevTemplatePreviewMessage,
+  FOLIODEV_TEMPLATE_PREVIEW_CHANNEL_PARAM,
+  FOLIODEV_TEMPLATE_PREVIEW_PARENT_ORIGIN_PARAM,
 } = messagesModule;
+const {
+  FOLIODEV_TEMPLATE_PREVIEW_MODE_PARAM,
+  isFolioDevPreviewLocation,
+  isFolioDevPreviewSearch,
+} = activationModule;
 const {
   FOLIODEV_PREVIEW_READY_RETRY_DELAYS_MS,
   startFolioDevPreviewReadyRetry,
@@ -109,6 +117,32 @@ function updateMessage(overrides = {}) {
 }
 
 console.log("FolioDev preview ready retry proof");
+
+const realFolioDevIframeSearch = new URLSearchParams({
+  [FOLIODEV_TEMPLATE_PREVIEW_CHANNEL_PARAM]: channelId,
+  [FOLIODEV_TEMPLATE_PREVIEW_PARENT_ORIGIN_PARAM]: "http://127.0.0.1:5199",
+}).toString();
+
+assert(
+  isFolioDevPreviewSearch(`?${realFolioDevIframeSearch}`),
+  "real FolioDev iframe query shape starts preview mode",
+);
+assert(
+  isFolioDevPreviewSearch(`?${FOLIODEV_TEMPLATE_PREVIEW_MODE_PARAM}=1`),
+  "legacy explicit preview flag starts preview mode",
+);
+assert(
+  isFolioDevPreviewLocation({ pathname: "/foliodev-preview", search: "" }, false),
+  "standalone foliodev preview route starts preview mode",
+);
+assert(
+  isFolioDevPreviewLocation({ pathname: "/", search: "" }, true),
+  "copied preview runtime build starts preview mode",
+);
+assert(
+  !isFolioDevPreviewLocation({ pathname: "/", search: "" }, false),
+  "standalone demo without preview URL stays out of preview mode",
+);
 
 const retry = startFolioDevPreviewReadyRetry({
   postReady: () => postedMessages.push(createPreviewReadyMessage(channelId)),

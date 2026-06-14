@@ -12,6 +12,7 @@ import {
   normalizePreviewData,
   type TemplateRuntimeData,
 } from "../data/previewNormalization";
+import { isFolioDevPreviewLocation } from "./previewActivation";
 import { startFolioDevPreviewReadyRetry } from "./previewReadyRetry";
 
 function isPreviewRoute() {
@@ -19,10 +20,7 @@ function isPreviewRoute() {
     return false;
   }
 
-  return (
-    window.location.pathname.endsWith("/foliodev-preview") ||
-    window.location.search.includes("foliodevPreview=1")
-  );
+  return isFolioDevPreviewLocation(window.location);
 }
 
 function readPreviewConnection() {
