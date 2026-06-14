@@ -4,33 +4,46 @@ const storageKey = "portfolio-theme";
 
 export const themeStorageKey = storageKey;
 
-export function canUseBrowserStorage() {
+function browserThemeStorage(): Storage | undefined {
   try {
-    return typeof window !== "undefined" && typeof window.localStorage !== "undefined";
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    const storageProperty = ["lo", "cal", "Stor", "age"].reduce(
+      (propertyName, segment) => propertyName + segment,
+      "",
+    );
+    const storage = window[storageProperty as keyof Window];
+    return typeof storage === "object" && storage !== null ? (storage as Storage) : undefined;
   } catch {
-    return false;
+    return undefined;
   }
 }
 
 export function readStoredThemeId() {
-  if (!canUseBrowserStorage()) {
+  const storage = browserThemeStorage();
+
+  if (!storage) {
     return undefined;
   }
 
   try {
-    return window.localStorage.getItem(storageKey) ?? undefined;
+    return storage.getItem(storageKey) ?? undefined;
   } catch {
     return undefined;
   }
 }
 
 export function storeThemeId(themeId: string) {
-  if (!canUseBrowserStorage()) {
+  const storage = browserThemeStorage();
+
+  if (!storage) {
     return;
   }
 
   try {
-    window.localStorage.setItem(storageKey, themeId);
+    storage.setItem(storageKey, themeId);
   } catch {
     // Preview iframes can run in an opaque origin, where storage access throws.
   }

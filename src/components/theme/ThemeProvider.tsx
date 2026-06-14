@@ -1,5 +1,4 @@
 import {
-  useEffect,
   useLayoutEffect,
   useMemo,
   useState,
@@ -14,7 +13,7 @@ import {
 import { applyThemeVariables, readStoredThemeId, storeThemeId } from "../../lib/theme";
 import { ThemeContext, type ThemeContextValue } from "./ThemeContext";
 const useBrowserLayoutEffect =
-  typeof window === "undefined" ? useEffect : useLayoutEffect;
+  typeof window === "undefined" ? () => undefined : useLayoutEffect;
 
 type ThemeProviderProps = {
   children: ReactNode;
@@ -32,15 +31,7 @@ export function ThemeProvider({
     return getThemeById(previewThemeId ?? storedThemeId ?? siteConfig.theme.activeTheme).id;
   });
 
-  const currentTheme = getThemeById(themeId);
-
-  useEffect(() => {
-    if (!previewThemeId) {
-      return;
-    }
-
-    setThemeId(getThemeById(previewThemeId).id);
-  }, [previewThemeId]);
+  const currentTheme = getThemeById(previewThemeId ?? themeId);
 
   useBrowserLayoutEffect(() => {
     applyThemeVariables(currentTheme);

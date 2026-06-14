@@ -3,6 +3,8 @@ import {
   createPreviewErrorMessage,
   createPreviewLinkClickMessage,
   createPreviewReadyMessage,
+  FOLIODEV_TEMPLATE_PREVIEW_CHANNEL_PARAM,
+  FOLIODEV_TEMPLATE_PREVIEW_PARENT_ORIGIN_PARAM,
   isFolioDevTemplatePreviewMessage,
   type FolioDevTemplatePreviewLinkClickReason,
 } from "./previewMessages";
@@ -22,12 +24,35 @@ function isPreviewRoute() {
   );
 }
 
-function postToParent(message: unknown) {
+function readPreviewConnection() {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const channelId = params.get(FOLIODEV_TEMPLATE_PREVIEW_CHANNEL_PARAM);
+  const parentOrigin = params.get(FOLIODEV_TEMPLATE_PREVIEW_PARENT_ORIGIN_PARAM);
+
+  if (!channelId || !parentOrigin) {
+    return undefined;
+  }
+
+  try {
+    return {
+      channelId,
+      parentOrigin: new URL(parentOrigin).origin,
+    };
+  } catch {
+    return undefined;
+  }
+}
+
+function postToParent(message: unknown, parentOrigin: string) {
   if (typeof window === "undefined" || window.parent === window) {
     return;
   }
 
-  window.parent.postMessage(message, "*");
+  window.parent.postMessage(message, parentOrigin);
 }
 
 function closestAnchor(target: EventTarget | null) {
@@ -85,15 +110,21 @@ function classifyPreviewLink(anchor: HTMLAnchorElement): {
 
 export function useFolioDevPreviewData() {
   const [isPreviewMode] = useState(isPreviewRoute);
+  const [previewConnection] = useState(readPreviewConnection);
   const [previewData, setPreviewData] = useState<TemplateRuntimeData | null>(null);
 
   useEffect(() => {
-    if (!isPreviewMode || typeof window === "undefined") {
+    if (!isPreviewMode || !previewConnection || typeof window === "undefined") {
       return;
     }
 
+    const connection = previewConnection;
+
     function handleMessage(event: MessageEvent) {
-      if (!isFolioDevTemplatePreviewMessage(event.data)) {
+      if (
+        event.origin !== connection.parentOrigin ||
+        !isFolioDevTemplatePreviewMessage(event.data, connection.channelId)
+      ) {
         return;
       }
 
@@ -101,22 +132,30 @@ export function useFolioDevPreviewData() {
         setPreviewData(normalizePreviewData(event.data.data));
       } catch (error) {
         const reason = error instanceof Error ? error.message : "Unable to apply preview data.";
-        postToParent(createPreviewErrorMessage(reason));
+        postToParent(
+          createPreviewErrorMessage(connection.channelId, reason),
+          connection.parentOrigin,
+        );
       }
     }
 
     window.addEventListener("message", handleMessage);
-    postToParent(createPreviewReadyMessage());
+    postToParent(
+      createPreviewReadyMessage(connection.channelId),
+      connection.parentOrigin,
+    );
 
     return () => {
       window.removeEventListener("message", handleMessage);
     };
-  }, [isPreviewMode]);
+  }, [isPreviewMode, previewConnection]);
 
   useEffect(() => {
-    if (!isPreviewMode || typeof window === "undefined") {
+    if (!isPreviewMode || !previewConnection || typeof window === "undefined") {
       return;
     }
+
+    const connection = previewConnection;
 
     function handlePreviewLinkClick(event: MouseEvent) {
       const anchor = closestAnchor(event.target);
@@ -131,7 +170,14 @@ export function useFolioDevPreviewData() {
       const classification = classifyPreviewLink(anchor);
       const label = anchor.textContent?.trim() || anchor.getAttribute("aria-label") || undefined;
 
-      postToParent(createPreviewLinkClickMessage({ ...classification, label }));
+      postToParent(
+        createPreviewLinkClickMessage({
+          ...classification,
+          channelId: connection.channelId,
+          label,
+        }),
+        connection.parentOrigin,
+      );
     }
 
     document.addEventListener("click", handlePreviewLinkClick, true);
@@ -139,7 +185,7 @@ export function useFolioDevPreviewData() {
     return () => {
       document.removeEventListener("click", handlePreviewLinkClick, true);
     };
-  }, [isPreviewMode]);
+  }, [isPreviewMode, previewConnection]);
 
   return { isPreviewMode, previewData };
 }
