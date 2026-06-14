@@ -3,6 +3,10 @@ import {
   education as staticEducation,
   type EducationItem,
 } from "./education";
+import {
+  experience as staticExperience,
+  type ExperienceItem,
+} from "./experience";
 import { navigationItems as staticNavigationItems, type NavigationItem } from "./navigation";
 import { profile as staticProfile, type CtaLink, type Profile } from "./profile";
 import {
@@ -40,6 +44,7 @@ export type TemplateRuntimeData = {
   siteConfig: RuntimeSiteConfig;
   profile: Profile;
   projects: Project[];
+  experience: ExperienceItem[];
   skillCategories: SkillCategory[];
   skillItems: SkillItem[];
   education: EducationItem[];
@@ -58,6 +63,7 @@ const staticRuntimeData: TemplateRuntimeData = {
   siteConfig: staticSiteConfig,
   profile: staticProfile,
   projects: staticProjects,
+  experience: staticExperience,
   skillCategories: staticSkillCategories,
   skillItems: staticSkillItems,
   education: staticEducation,
@@ -299,6 +305,7 @@ function normalizeProfile(
   const sections = asRecord(record.sections);
   const aboutSection = asRecord(sections.about);
   const projectsSection = asRecord(sections.projects);
+  const experienceSection = asRecord(sections.experience);
   const skillsSection = asRecord(sections.skills);
   const contactSection = asRecord(sections.contact);
   const name = text(record.name) || text(record.fullName) || siteConfig.brand.name;
@@ -379,6 +386,12 @@ function normalizeProfile(
           text(projectsSection.viewAllLabel) ||
           staticProfile.sections.projects.viewAllLabel,
       },
+      experience: {
+        eyebrow:
+          text(experienceSection.eyebrow) || staticProfile.sections.experience.eyebrow,
+        heading:
+          text(experienceSection.heading) || staticProfile.sections.experience.heading,
+      },
       skills: {
         eyebrow: text(skillsSection.eyebrow) || staticProfile.sections.skills.eyebrow,
         heading: text(skillsSection.heading) || staticProfile.sections.skills.heading,
@@ -400,7 +413,7 @@ function normalizeProfile(
   };
 }
 
-function normalizeProjects(value: unknown): Project[] {
+function normalizeProjects(value: unknown, fallbackToStatic = true): Project[] {
   const mapped = recordArray(value)
     .map((project, index): Project => {
       const title = text(project.title) || `Project ${index + 1}`;
@@ -442,7 +455,30 @@ function normalizeProjects(value: unknown): Project[] {
     })
     .filter((project) => project.title || project.summary);
 
-  return mapped.length > 0 ? mapped : staticProjects;
+  return mapped.length > 0 ? mapped : fallbackToStatic ? staticProjects : [];
+}
+
+function normalizeExperience(value: unknown, fallbackToStatic = true): ExperienceItem[] {
+  const mapped = recordArray(value)
+    .map((entry, index): ExperienceItem => {
+      const title = text(entry.title);
+      const organization = text(entry.organization);
+      const dates = text(entry.dates) || text(entry.timeline);
+
+      return {
+        id: text(entry.id) || slugify([title, organization].filter(Boolean).join("-"), `experience-${index + 1}`),
+        title,
+        organization,
+        location: text(entry.location),
+        dates,
+        description: text(entry.description),
+        highlights: textArray(entry.highlights),
+        technologies: textArray(entry.technologies),
+      };
+    })
+    .filter((entry) => entry.title && entry.organization && entry.description);
+
+  return mapped.length > 0 ? mapped : fallbackToStatic ? staticExperience : [];
 }
 
 function normalizeSkills(value: unknown) {
@@ -538,7 +574,17 @@ function normalizeSocialLinks(value: unknown): SocialLink[] {
   return links.length > 0 ? links : staticSocialLinks;
 }
 
-function normalizeNavigation(value: unknown): NavigationItem[] {
+function normalizeNavigation(
+  value: unknown,
+  options: { hasExperience?: boolean } = {},
+): NavigationItem[] {
+  const experienceItem: NavigationItem = {
+    label: "Experience",
+    href: "/#experience",
+    type: "section",
+    showInMobile: true,
+    showInDesktop: true,
+  };
   const mapped = recordArray(value)
     .filter((item) => item.enabled !== false)
     .map((item) => {
@@ -552,25 +598,46 @@ function normalizeNavigation(value: unknown): NavigationItem[] {
         showInDesktop: true,
       } satisfies NavigationItem;
     })
-    .filter((item) => item.label && item.href);
+    .filter((item) => item.label && item.href)
+    .filter((item) => {
+      const href = item.href.toLowerCase();
+      const label = item.label.toLowerCase();
+      return options.hasExperience || (href !== "/#experience" && label !== "experience");
+    });
 
-  return mapped.length > 0 ? mapped : staticNavigationItems;
+  const withExperience =
+    options.hasExperience &&
+    !mapped.some((item) => item.href.toLowerCase() === "/#experience")
+      ? mapped.length > 0
+        ? [mapped[0], experienceItem, ...mapped.slice(1)]
+        : mapped
+      : mapped;
+
+  const fallbackNavigation = options.hasExperience
+    ? [staticNavigationItems[0], experienceItem, ...staticNavigationItems.slice(1)]
+    : staticNavigationItems;
+
+  return withExperience.length > 0 ? withExperience : fallbackNavigation;
 }
 
 export function normalizePreviewData(data: FolioDevTemplatePreviewData): TemplateRuntimeData {
   const siteConfig = normalizeSiteConfig(data.siteConfig);
   const education = normalizeEducation(data.education);
   const skills = normalizeSkills(data.skills);
+  const experience = normalizeExperience(data.experience, false);
 
   return {
     siteConfig,
     profile: normalizeProfile(data.profile, siteConfig, education),
-    projects: normalizeProjects(data.projects),
+    projects: normalizeProjects(data.projects, false),
+    experience,
     skillCategories: skills.skillCategories,
     skillItems: skills.skillItems,
     education,
     socialLinks: normalizeSocialLinks(data.socialLinks),
-    navigationItems: normalizeNavigation(data.navigation),
+    navigationItems: normalizeNavigation(data.navigation, {
+      hasExperience: experience.length > 0,
+    }),
   };
 }
 

@@ -54,6 +54,10 @@ export const exampleProfile: Profile = {
       description: "Projects focused on software tools and technical learning.",
       viewAllLabel: "View All Projects",
     },
+    experience: {
+      eyebrow: "Experience",
+      heading: "Where I've Worked",
+    },
     skills: {
       eyebrow: "Skills",
       heading: "Technologies I Work With",

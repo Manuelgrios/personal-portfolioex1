@@ -49,6 +49,10 @@ export type Profile = {
       description: string;
       viewAllLabel: string;
     };
+    experience: {
+      eyebrow: string;
+      heading: string;
+    };
     skills: {
       eyebrow: string;
       heading: string;
@@ -136,6 +140,10 @@ export const profile: Profile = {
       description:
         "Selected projects focused on software tools, automation, debugging, data structures, and data visualization.",
       viewAllLabel: "View All Projects",
+    },
+    experience: {
+      eyebrow: "Experience",
+      heading: "Where I've Worked",
     },
     skills: {
       eyebrow: "Skills",
