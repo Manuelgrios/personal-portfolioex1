@@ -11,7 +11,7 @@ import {
 import {
   normalizePreviewData,
   type TemplateRuntimeData,
-} from "../data/runtimeData";
+} from "../data/previewNormalization";
 
 function isPreviewRoute() {
   if (typeof window === "undefined") {
