@@ -9,6 +9,7 @@ export type FolioDevTemplatePreviewData = {
   projects: unknown[];
   skills: unknown;
   education: unknown[];
+  experience: unknown[];
   socialLinks: unknown;
   navigation: unknown[];
 };
@@ -86,6 +87,7 @@ export function isFolioDevTemplatePreviewMessage(
     Array.isArray(value.data.projects) &&
     isRecord(value.data.skills) &&
     Array.isArray(value.data.education) &&
+    Array.isArray(value.data.experience) &&
     isRecord(value.data.socialLinks) &&
     Array.isArray(value.data.navigation)
   );

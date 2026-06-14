@@ -11,7 +11,7 @@ import { getIcon } from "../lib/icons";
 
 export function Home() {
   const { currentTheme } = useTheme();
-  const { profile, projects, skillItems, socialLinks } = useRuntimeData();
+  const { profile, projects, experience, skillItems, socialLinks } = useRuntimeData();
   const featuredProjects = projects
     .filter((project) => project.featured)
     .slice(0, 6);
@@ -162,6 +162,65 @@ export function Home() {
         </div>
       </Card>
 
+      {experience.length > 0 ? (
+        <Card id="experience" className="scroll-mt-24 p-6 md:p-7">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
+            {profile.sections.experience.eyebrow}
+          </p>
+          <h2 className="mt-2 text-3xl font-bold text-text">
+            {profile.sections.experience.heading}
+          </h2>
+          <div className="mt-6 grid gap-3 lg:grid-cols-2">
+            {experience.map((entry) => (
+              <article
+                key={entry.id}
+                className="rounded-xl border border-border/80 bg-background/30 p-5"
+              >
+                <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <h3 className="text-lg font-bold leading-snug text-text">
+                      {entry.title}
+                    </h3>
+                    <p className="mt-1 text-sm font-semibold text-accent-dark">
+                      {entry.organization}
+                    </p>
+                  </div>
+                  {[entry.dates, entry.location].filter(Boolean).length > 0 ? (
+                    <p className="text-sm leading-6 text-muted md:text-right">
+                      {[entry.dates, entry.location].filter(Boolean).join(" | ")}
+                    </p>
+                  ) : null}
+                </div>
+                <p className="mt-4 text-sm leading-7 text-muted">
+                  {entry.description}
+                </p>
+                {entry.highlights && entry.highlights.length > 0 ? (
+                  <ul className="mt-4 space-y-2">
+                    {entry.highlights.slice(0, 3).map((highlight) => (
+                      <li
+                        key={highlight}
+                        className="flex gap-2 text-sm leading-6 text-text"
+                      >
+                        <CheckCircle2 className="mt-1 shrink-0 text-accent" size={15} />
+                        <span>{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
+                {entry.technologies && entry.technologies.length > 0 ? (
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {entry.technologies.map((technology) => (
+                      <Tag key={technology}>{technology}</Tag>
+                    ))}
+                  </div>
+                ) : null}
+              </article>
+            ))}
+          </div>
+        </Card>
+      ) : null}
+
+      {projects.length > 0 ? (
       <Card id="projects" className="scroll-mt-24 p-6 md:p-7">
         <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
           <div>
@@ -219,6 +278,7 @@ export function Home() {
           </div>
         ) : null}
       </Card>
+      ) : null}
 
       <Card id="skills" className="scroll-mt-24 p-6 md:p-7">
         <p className="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
