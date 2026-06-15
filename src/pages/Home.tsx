@@ -11,7 +11,7 @@ import { getIcon } from "../lib/icons";
 
 export function Home() {
   const { currentTheme } = useTheme();
-  const { profile, projects, experience, skillItems, socialLinks, editorPlaceholders } = useRuntimeData();
+  const { profile, projects, experience, skillItems, socialLinks, editorPlaceholders, editorPlaceholderPolicy } = useRuntimeData();
   const featuredProjects = projects
     .filter((project) => project.featured)
     .slice(0, 6);
@@ -309,7 +309,7 @@ export function Home() {
           </div>
         ) : null}
       </Card>
-      ) : editorPlaceholders ? (
+      ) : editorPlaceholders && editorPlaceholderPolicy.projects !== "hide-placeholder" ? (
         <Card id="projects" className="scroll-mt-24 p-6 md:p-7" data-editor-placeholder="projects">
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
             {profile.sections.projects.eyebrow}

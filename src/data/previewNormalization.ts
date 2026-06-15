@@ -64,6 +64,9 @@ export type TemplateRuntimeData = {
   education: EducationItem[];
   socialLinks: SocialLink[];
   navigationItems: NavigationItem[];
+  editorPlaceholderPolicy: {
+    projects: "hide-placeholder" | "show-editor-placeholder";
+  };
   /**
    * Editor-only flag: true only in FolioDev workspace preview (normalizePreviewData). It lets the
    * template render neutral display-only placeholders for empty required fields. It never affects the
@@ -186,7 +189,22 @@ function normalizeUrl(value: unknown): string {
 }
 
 function displayUrl(value: string): string {
+  const linkedInHandle = value.match(/linkedin\.com\/in\/([^/?#]+)/i)?.[1];
+  if (linkedInHandle) {
+    return linkedInHandle;
+  }
   return value.replace(/^https?:\/\//i, "").replace(/\/$/, "");
+}
+
+function normalizeEditorPlaceholderPolicy(value: unknown): TemplateRuntimeData["editorPlaceholderPolicy"] {
+  const metadata = asRecord(value);
+  const curation = asRecord(metadata.curation);
+  const emptySections = asRecord(curation.emptySections);
+  const projectPolicy = text(emptySections.projects);
+
+  return {
+    projects: projectPolicy === "hide-placeholder" ? "hide-placeholder" : "show-editor-placeholder",
+  };
 }
 
 function slugify(value: string, fallback: string): string {
@@ -606,6 +624,7 @@ export function normalizePreviewData(data: FolioDevTemplatePreviewData): Templat
     navigationItems: normalizeNavigation(data.navigation, {
       hasExperience: experience.length > 0,
     }),
+    editorPlaceholderPolicy: normalizeEditorPlaceholderPolicy(data.metadata),
     // FolioDev workspace preview: enable editor-only placeholders for empty required fields. This is a
     // display hint only; the normalized data above remains strictly empty.
     editorPlaceholders: true,

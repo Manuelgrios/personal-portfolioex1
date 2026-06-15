@@ -119,9 +119,20 @@ assert(empty.profile.hero.primaryCta.href === "" && empty.profile.hero.secondary
 // Editor placeholders: FolioDev preview enables the display-only placeholder layer, but the flag must
 // never mutate the strict empty data above (the placeholders live only in Home.tsx rendering).
 assert(empty.editorPlaceholders === true, "FolioDev preview enables editorPlaceholders for empty data");
+assert(empty.editorPlaceholderPolicy.projects === "show-editor-placeholder", "empty preview keeps project placeholders enabled");
 assert(
   empty.projects.length === 0 && empty.skillItems.length === 0 && empty.profile.hero.headline.length === 0,
   "editorPlaceholders flag does not create real projects/skills/name data",
+);
+
+const hiddenProjectPlaceholderPolicy = normalizePreviewData(
+  emptyPreview({
+    metadata: { curation: { emptySections: { projects: "hide-placeholder" } } },
+  }),
+);
+assert(
+  hiddenProjectPlaceholderPolicy.editorPlaceholderPolicy.projects === "hide-placeholder",
+  "curation metadata can hide project editor placeholder card",
 );
 
 // 12 (no static revival). Static demo content is NOT revived for empty FolioDev data.

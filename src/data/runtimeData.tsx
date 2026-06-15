@@ -24,6 +24,9 @@ const staticRuntimeData: TemplateRuntimeData = {
   education: staticEducation,
   socialLinks: staticSocialLinks,
   navigationItems: staticNavigationItems,
+  editorPlaceholderPolicy: {
+    projects: "show-editor-placeholder",
+  },
   // Standalone and published runtimes never show editor placeholders.
   editorPlaceholders: false,
 };
