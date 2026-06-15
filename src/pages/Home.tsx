@@ -22,16 +22,16 @@ export function Home() {
 
   return (
     <div className="space-y-4 md:space-y-5">
-      <section className="grid min-h-[650px] gap-8 overflow-hidden pt-10 md:min-h-[700px] md:pt-8 lg:min-h-[735px] lg:grid-cols-[1fr_0.95fr] lg:items-center">
-        <div className="relative z-20 pb-6 lg:pb-24">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-accent">
+      <section className="grid min-h-[650px] min-w-0 gap-8 overflow-hidden pt-10 md:min-h-[700px] md:pt-8 lg:min-h-[735px] lg:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] lg:items-center">
+        <div className="relative z-20 min-w-0 pb-6 lg:pb-24">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-accent [overflow-wrap:anywhere]">
             {profile.hero.eyebrow || (editorPlaceholders ? "Your headline" : "")}
           </p>
-          <h1 className="mt-6 max-w-[760px] text-4xl font-black leading-[1.04] tracking-normal text-text sm:text-5xl md:text-[3.55rem] xl:text-[4rem]">
+          <h1 className="mt-6 max-w-[760px] min-w-0 text-4xl font-black leading-[1.04] tracking-normal text-text [text-wrap:balance] sm:text-5xl md:text-[3.55rem] xl:text-[4rem]">
             {hasHeroHeadline ? (
               profile.hero.headline.map((line) => (
                 <span
-                  className="block whitespace-normal break-words lg:whitespace-nowrap"
+                  className="block min-w-0 whitespace-normal break-words [overflow-wrap:anywhere]"
                   key={line}
                 >
                   {line}
@@ -39,26 +39,26 @@ export function Home() {
               ))
             ) : editorPlaceholders ? (
               <span
-                className="block whitespace-normal break-words text-muted/70 lg:whitespace-nowrap"
+                className="block min-w-0 whitespace-normal break-words text-muted/70 [overflow-wrap:anywhere]"
                 data-editor-placeholder="name"
               >
                 Your name
               </span>
             ) : null}
             {profile.hero.highlightedHeadline ? (
-              <span className="block whitespace-normal break-words text-accent-dark lg:whitespace-nowrap">
+              <span className="block min-w-0 whitespace-normal break-words text-accent-dark [overflow-wrap:anywhere]">
                 {profile.hero.highlightedHeadline}
               </span>
             ) : editorPlaceholders ? (
               <span
-                className="block whitespace-normal break-words text-accent-dark/70 lg:whitespace-nowrap"
+                className="block min-w-0 whitespace-normal break-words text-accent-dark/70 [overflow-wrap:anywhere]"
                 data-editor-placeholder="headline"
               >
                 Target role or headline
               </span>
             ) : null}
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-8 text-muted">
+          <p className="mt-6 max-w-xl text-lg leading-8 text-muted [overflow-wrap:anywhere]">
             {profile.hero.body ? (
               profile.hero.body
             ) : editorPlaceholders ? (
@@ -205,24 +205,24 @@ export function Home() {
             {experience.map((entry) => (
               <article
                 key={entry.id}
-                className="rounded-xl border border-border/80 bg-background/30 p-5"
+                className="min-w-0 rounded-xl border border-border/80 bg-background/30 p-5"
               >
-                <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
-                  <div>
+                <div className="flex min-w-0 flex-col gap-2">
+                  <div className="min-w-0">
                     <h3 className="text-lg font-bold leading-snug text-text">
                       {entry.title}
                     </h3>
-                    <p className="mt-1 text-sm font-semibold text-accent-dark">
+                    <p className="mt-1 text-sm font-semibold text-accent-dark [overflow-wrap:anywhere]">
                       {entry.organization}
                     </p>
                   </div>
                   {[entry.dates, entry.location].filter(Boolean).length > 0 ? (
-                    <p className="text-sm leading-6 text-muted md:text-right">
+                    <p className="text-sm leading-6 text-muted [overflow-wrap:anywhere]">
                       {[entry.dates, entry.location].filter(Boolean).join(" | ")}
                     </p>
                   ) : null}
                 </div>
-                <p className="mt-4 text-sm leading-7 text-muted">
+                <p className="mt-4 text-sm leading-7 text-muted [overflow-wrap:anywhere]">
                   {entry.description}
                 </p>
                 {entry.highlights && entry.highlights.length > 0 ? (
@@ -233,7 +233,7 @@ export function Home() {
                         className="flex gap-2 text-sm leading-6 text-text"
                       >
                         <CheckCircle2 className="mt-1 shrink-0 text-accent" size={15} />
-                        <span>{highlight}</span>
+                        <span className="min-w-0 [overflow-wrap:anywhere]">{highlight}</span>
                       </li>
                     ))}
                   </ul>

@@ -113,6 +113,8 @@ assert(empty.profile.headline === "" && empty.profile.bio === "" && empty.profil
 assert(empty.profile.focusAreas.length === 0, "empty focus areas -> []");
 assert(empty.profile.location === "" && empty.profile.email === "", "empty location/email -> empty");
 assert(empty.profile.hero.headline.length === 0, "empty hero headline -> []");
+assert(empty.profile.hero.eyebrow === "", "empty hero eyebrow -> empty");
+assert(empty.profile.hero.highlightedHeadline === "", "empty hero highlight -> empty");
 assert(empty.profile.hero.image.src === "", "empty hero image -> no image");
 assert(empty.profile.hero.primaryCta.href === "" && empty.profile.hero.secondaryCta.href === "", "empty CTAs -> no buttons");
 
@@ -149,6 +151,21 @@ const malformedProjects = normalizePreviewData(
 assert(malformedProjects.projects.length === 0, "malformed projects dropped (no Project 1 / coming soon)");
 const serializedMalformed = JSON.stringify(malformedProjects);
 assert(!serializedMalformed.includes("Project 1") && !serializedMalformed.includes("coming soon"), "no synthesized project placeholder text");
+
+const rawProgramProfile = normalizePreviewData(
+  emptyPreview({
+    profile: {
+      major: "Applied Computing B.A. + Data Visualization B.S.",
+      school: "University of Washington Bothell",
+      sections: { about: {}, projects: {}, experience: {}, skills: {}, contact: {} },
+      hero: { image: {} },
+    },
+  }),
+);
+assert(
+  rawProgramProfile.profile.hero.eyebrow === "" && rawProgramProfile.profile.hero.highlightedHeadline === "",
+  "preview mode does not synthesize hero eyebrow/highlight from raw major",
+);
 
 // Valid project kept with its real title.
 const validProject = normalizePreviewData(

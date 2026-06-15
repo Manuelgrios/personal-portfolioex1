@@ -359,9 +359,9 @@ function normalizeProfile(
     shortBio,
     focusAreas,
     hero: {
-      eyebrow: text(hero.eyebrow) || subtitleFallback,
+      eyebrow: text(hero.eyebrow),
       headline: heroHeadline,
-      highlightedHeadline: text(hero.highlightedHeadline) || major,
+      highlightedHeadline: text(hero.highlightedHeadline),
       body: text(hero.body) || shortBio,
       primaryCta: normalizeCta(hero.primaryCta),
       secondaryCta: normalizeCta(hero.secondaryCta),
