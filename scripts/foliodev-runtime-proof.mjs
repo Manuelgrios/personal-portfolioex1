@@ -113,15 +113,28 @@ assert(empty.profile.headline === "" && empty.profile.bio === "" && empty.profil
 assert(empty.profile.focusAreas.length === 0, "empty focus areas -> []");
 assert(empty.profile.location === "" && empty.profile.email === "", "empty location/email -> empty");
 assert(empty.profile.hero.headline.length === 0, "empty hero headline -> []");
+assert(empty.profile.hero.eyebrow === "", "empty hero eyebrow -> empty");
+assert(empty.profile.hero.highlightedHeadline === "", "empty hero highlight -> empty");
 assert(empty.profile.hero.image.src === "", "empty hero image -> no image");
 assert(empty.profile.hero.primaryCta.href === "" && empty.profile.hero.secondaryCta.href === "", "empty CTAs -> no buttons");
 
 // Editor placeholders: FolioDev preview enables the display-only placeholder layer, but the flag must
 // never mutate the strict empty data above (the placeholders live only in Home.tsx rendering).
 assert(empty.editorPlaceholders === true, "FolioDev preview enables editorPlaceholders for empty data");
+assert(empty.editorPlaceholderPolicy.projects === "show-editor-placeholder", "empty preview keeps project placeholders enabled");
 assert(
   empty.projects.length === 0 && empty.skillItems.length === 0 && empty.profile.hero.headline.length === 0,
   "editorPlaceholders flag does not create real projects/skills/name data",
+);
+
+const hiddenProjectPlaceholderPolicy = normalizePreviewData(
+  emptyPreview({
+    metadata: { curation: { emptySections: { projects: "hide-placeholder" } } },
+  }),
+);
+assert(
+  hiddenProjectPlaceholderPolicy.editorPlaceholderPolicy.projects === "hide-placeholder",
+  "curation metadata can hide project editor placeholder card",
 );
 
 // 12 (no static revival). Static demo content is NOT revived for empty FolioDev data.
@@ -138,6 +151,21 @@ const malformedProjects = normalizePreviewData(
 assert(malformedProjects.projects.length === 0, "malformed projects dropped (no Project 1 / coming soon)");
 const serializedMalformed = JSON.stringify(malformedProjects);
 assert(!serializedMalformed.includes("Project 1") && !serializedMalformed.includes("coming soon"), "no synthesized project placeholder text");
+
+const rawProgramProfile = normalizePreviewData(
+  emptyPreview({
+    profile: {
+      major: "Applied Computing B.A. + Data Visualization B.S.",
+      school: "University of Washington Bothell",
+      sections: { about: {}, projects: {}, experience: {}, skills: {}, contact: {} },
+      hero: { image: {} },
+    },
+  }),
+);
+assert(
+  rawProgramProfile.profile.hero.eyebrow === "" && rawProgramProfile.profile.hero.highlightedHeadline === "",
+  "preview mode does not synthesize hero eyebrow/highlight from raw major",
+);
 
 // Valid project kept with its real title.
 const validProject = normalizePreviewData(

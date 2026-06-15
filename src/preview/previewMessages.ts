@@ -12,6 +12,7 @@ export type FolioDevTemplatePreviewData = {
   experience: unknown[];
   socialLinks: unknown;
   navigation: unknown[];
+  metadata?: unknown;
 };
 
 export type FolioDevTemplatePreviewMessage = {
@@ -82,7 +83,8 @@ export function isFolioDevTemplatePreviewMessage(
     Array.isArray(value.data.education) &&
     Array.isArray(value.data.experience) &&
     isRecord(value.data.socialLinks) &&
-    Array.isArray(value.data.navigation)
+    Array.isArray(value.data.navigation) &&
+    (typeof value.data.metadata === "undefined" || isRecord(value.data.metadata))
   );
 }
 
