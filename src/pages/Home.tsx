@@ -9,6 +9,10 @@ import { useRuntimeData } from "../data/runtimeData";
 import { assetPath } from "../lib/assets";
 import { getIcon } from "../lib/icons";
 
+function normalizeSkillLabel(value: string): string {
+  return value.trim().replace(/\s+/g, " ").toLocaleLowerCase();
+}
+
 export function Home() {
   const { currentTheme } = useTheme();
   const { profile, projects, experience, skillItems, socialLinks, editorPlaceholders, editorPlaceholderPolicy } = useRuntimeData();
@@ -304,20 +308,25 @@ export function Home() {
           </p>
         ) : null}
         {skillItems.length > 0 ? (
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12">
-            {skillItems.map((skill) => (
-              <div
-                key={`${skill.category}-${skill.name}`}
-                className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-accent-dark/55 bg-background/36 px-3 py-3 text-center transition hover:border-accent"
-              >
-                <span className="text-xl font-black text-accent">
-                  {skill.shortLabel}
-                </span>
-                <span className="text-xs font-medium text-text">
-                  {skill.name}
-                </span>
-              </div>
-            ))}
+          <div className="mt-6 grid min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-3">
+            {skillItems.map((skill) => {
+              const showFullName = normalizeSkillLabel(skill.shortLabel) !== normalizeSkillLabel(skill.name);
+              return (
+                <div
+                  key={`${skill.category}-${skill.name}`}
+                  className="flex h-auto min-h-24 min-w-0 flex-col items-center justify-center gap-2 rounded-lg border border-accent-dark/55 bg-background/36 px-4 py-4 text-center transition-colors hover:border-accent"
+                >
+                  <span className="max-w-full text-balance text-[clamp(1rem,0.95rem+0.25vw,1.125rem)] font-black leading-[1.25] text-accent [hyphens:none] [overflow-wrap:anywhere]">
+                    {skill.shortLabel}
+                  </span>
+                  {showFullName ? (
+                    <span className="max-w-full text-balance text-sm font-medium leading-5 text-text [hyphens:none] [overflow-wrap:anywhere]">
+                      {skill.name}
+                    </span>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
         ) : editorPlaceholders ? (
           <div

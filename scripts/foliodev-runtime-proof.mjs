@@ -342,6 +342,7 @@ const projectCardSource = await fs.readFile(path.join(repoRoot, "src/components/
 const projectActionsSource = await fs.readFile(path.join(repoRoot, "src/components/projects/ProjectActions.tsx"), "utf8");
 const projectMediaSource = await fs.readFile(path.join(repoRoot, "src/components/projects/ProjectMedia.tsx"), "utf8");
 const sectionHeaderSource = await fs.readFile(path.join(repoRoot, "src/components/ui/SectionHeader.tsx"), "utf8");
+const homeSource = await fs.readFile(path.join(repoRoot, "src/pages/Home.tsx"), "utf8");
 assert(projectDetailSource.includes('"data-project-field": "title"'), "Project detail registers title");
 assert(projectDetailSource.includes('"data-project-field": "shortDescription"'), "Project detail registers shortDescription");
 for (const field of ["whatYouBuilt", "problemSolved", "outcome"]) {
@@ -353,6 +354,21 @@ assert(projectCardSource.includes('data-project-field="title"') && projectCardSo
 assert(projectActionsSource.includes('data-project-field={link.label === "GitHub" ? "githubUrl" : "liveDemoUrl"}'), "Project actions mark exact GitHub and Live Demo fields");
 assert(projectMediaSource.includes('data-project-field="imageUrl"'), "Project media marks the Image URL destination");
 assert(sectionHeaderSource.includes("titleAttributes") && sectionHeaderSource.includes("descriptionAttributes"), "SectionHeader forwards presentation-neutral field attributes");
+
+// PRM-SKILLS-AI-L: skills keep a readable minimum width and duplicate labels render once.
+assert(
+  homeSource.includes("grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))]"),
+  "skill grid uses adaptive minimum-width columns",
+);
+assert(!homeSource.includes("xl:grid-cols-12"), "skill grid no longer forces twelve desktop columns");
+assert(
+  homeSource.includes("normalizeSkillLabel(skill.shortLabel) !== normalizeSkillLabel(skill.name)"),
+  "skill card suppresses a duplicate full name",
+);
+assert(
+  homeSource.includes("[overflow-wrap:anywhere]") && homeSource.includes("[hyphens:none]") && homeSource.includes("min-w-0"),
+  "skill cards provide overlap-safe long-label wrapping",
+);
 
 if (failures > 0) {
   console.error(`\nFolioDev strict preview normalization proof FAILED with ${failures} assertion(s).`);
