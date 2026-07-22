@@ -173,6 +173,41 @@ const validProject = normalizePreviewData(
 );
 assert(validProject.projects.length === 1 && validProject.projects[0].title === "Accessibility Dashboard", "valid project kept with real title");
 
+const projectMediaAndLinks = normalizePreviewData(
+  emptyPreview({
+    projects: [
+      {
+        title: "Project with proof",
+        summary: "Carries media and external actions.",
+        imageUrl: "  https://images.example.com/project.png  ",
+        githubUrl: "https://github.com/example/project",
+        liveDemoUrl: "https://project.example.com/demo",
+      },
+    ],
+  }),
+).projects[0];
+assert(projectMediaAndLinks.imageUrl === "https://images.example.com/project.png", "project image keeps a valid explicit HTTPS URL");
+assert(
+  projectMediaAndLinks.links?.map((link) => link.label).join(",") === "GitHub,Live Demo",
+  "project GitHub and live demo links become exact actions",
+);
+
+const unsafeProjectUrls = normalizePreviewData(
+  emptyPreview({
+    projects: [
+      {
+        title: "Unsafe URL proof",
+        summary: "Invalid project URLs are removed.",
+        imageUrl: "javascript:alert(1)",
+        githubUrl: "mailto:owner@example.com",
+        liveDemoUrl: "/relative-demo",
+      },
+    ],
+  }),
+).projects[0];
+assert(unsafeProjectUrls.imageUrl === "", "unsafe project image URL becomes empty");
+assert(unsafeProjectUrls.links?.length === 0, "mail and relative project actions are removed");
+
 // 3. Empty skill groups -> no static tiles; valid skill kept.
 assert(normalizePreviewData(emptyPreview({ skills: { groups: [] } })).skillItems.length === 0, "empty skill groups -> no static tiles");
 const validSkills = normalizePreviewData(emptyPreview({ skills: { groups: [{ category: "Web", items: [{ name: "React" }] }] } }));

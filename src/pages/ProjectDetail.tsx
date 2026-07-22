@@ -1,4 +1,6 @@
 import { Link, useParams } from "react-router-dom";
+import { ProjectActions } from "../components/projects/ProjectActions";
+import { ProjectMedia } from "../components/projects/ProjectMedia";
 import { Card } from "../components/ui/Card";
 import { SectionHeader } from "../components/ui/SectionHeader";
 import { Tag } from "../components/ui/Tag";
@@ -31,6 +33,10 @@ export function ProjectDetail() {
         title={project.title}
         description={project.summary}
       />
+      <Card className="overflow-hidden p-4 md:p-5">
+        <ProjectMedia project={project} />
+        <ProjectActions className="mt-5" project={project} />
+      </Card>
       <div className="grid gap-5 md:grid-cols-2">
         <DetailCard title="Overview" body={project.overview} />
         <DetailCard title="Challenge" body={project.challenge} />

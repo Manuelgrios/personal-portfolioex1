@@ -1,6 +1,6 @@
 import { ArrowRight, CheckCircle2, Mail } from "lucide-react";
 import type { CSSProperties } from "react";
-import { Link } from "react-router-dom";
+import { ProjectCard } from "../components/projects/ProjectCard";
 import { useTheme } from "../components/theme/useTheme";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
@@ -270,42 +270,9 @@ export function Home() {
 
         {featuredProjects.length > 0 ? (
           <div className="mt-7 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {featuredProjects.map((project) => {
-              const Icon = getIcon(project.icon);
-
-              return (
-                <Link key={project.slug} to={`/projects/${project.slug}`}>
-                  <div className="group h-full rounded-xl border border-accent-dark/45 bg-card-soft/42 p-4 transition hover:border-accent hover:bg-card-soft/70">
-                    <div className="flex items-start gap-4">
-                      <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border bg-surface-soft/80 text-accent">
-                        <Icon size={25} />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-3">
-                          <h3 className="text-lg font-bold leading-snug text-text">
-                            {project.title}
-                          </h3>
-                          <ArrowRight
-                            className="mt-1 text-accent-dark opacity-50 transition group-hover:translate-x-1 group-hover:opacity-100"
-                            size={16}
-                          />
-                        </div>
-                        <p className="mt-3 text-sm leading-6 text-muted">
-                          {project.summary}
-                        </p>
-                        {project.tags.length > 0 ? (
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            {project.tags.map((tag) => (
-                              <Tag key={tag}>{tag}</Tag>
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+            {featuredProjects.map((project) => (
+              <ProjectCard key={project.slug} project={project} variant="home" />
+            ))}
           </div>
         ) : null}
       </Card>

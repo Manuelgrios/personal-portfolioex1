@@ -12,6 +12,7 @@ export type Project = {
   tags: string[];
   icon: "code" | "box" | "flask" | "terminal" | "apple" | "chart";
   featured: boolean;
+  imageUrl?: string;
   links?: ProjectLink[];
   overview?: string;
   challenge?: string;
