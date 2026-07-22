@@ -343,6 +343,7 @@ const projectActionsSource = await fs.readFile(path.join(repoRoot, "src/componen
 const projectMediaSource = await fs.readFile(path.join(repoRoot, "src/components/projects/ProjectMedia.tsx"), "utf8");
 const sectionHeaderSource = await fs.readFile(path.join(repoRoot, "src/components/ui/SectionHeader.tsx"), "utf8");
 const homeSource = await fs.readFile(path.join(repoRoot, "src/pages/Home.tsx"), "utf8");
+const skillLabelPresentationSource = await fs.readFile(path.join(repoRoot, "src/data/skillLabelPresentation.ts"), "utf8");
 assert(projectDetailSource.includes('"data-project-field": "title"'), "Project detail registers title");
 assert(projectDetailSource.includes('"data-project-field": "shortDescription"'), "Project detail registers shortDescription");
 for (const field of ["whatYouBuilt", "problemSolved", "outcome"]) {
@@ -362,9 +363,11 @@ assert(
 );
 assert(!homeSource.includes("xl:grid-cols-12"), "skill grid no longer forces twelve desktop columns");
 assert(
-  homeSource.includes("normalizeSkillLabel(skill.shortLabel) !== normalizeSkillLabel(skill.name)"),
-  "skill card suppresses a duplicate full name",
+  homeSource.includes("shouldRenderSkillSupportingName(skill.shortLabel, skill.name)")
+    && skillLabelPresentationSource.includes("normalizeSkillLabel(shortLabel) !== normalizeSkillLabel(name)"),
+  "skill card delegates normalized duplicate suppression to the shared presentation helper",
 );
+assert(skillLabelPresentationSource.includes("/[._/-]+/g"), "normalized duplicate labels tolerate safe punctuation variants");
 assert(
   homeSource.includes("[overflow-wrap:anywhere]") && homeSource.includes("[hyphens:none]") && homeSource.includes("min-w-0"),
   "skill cards provide overlap-safe long-label wrapping",

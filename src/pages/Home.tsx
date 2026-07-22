@@ -6,12 +6,9 @@ import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { Tag } from "../components/ui/Tag";
 import { useRuntimeData } from "../data/runtimeData";
+import { shouldRenderSkillSupportingName } from "../data/skillLabelPresentation";
 import { assetPath } from "../lib/assets";
 import { getIcon } from "../lib/icons";
-
-function normalizeSkillLabel(value: string): string {
-  return value.trim().replace(/\s+/g, " ").toLocaleLowerCase();
-}
 
 export function Home() {
   const { currentTheme } = useTheme();
@@ -310,7 +307,7 @@ export function Home() {
         {skillItems.length > 0 ? (
           <div className="mt-6 grid min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-3">
             {skillItems.map((skill) => {
-              const showFullName = normalizeSkillLabel(skill.shortLabel) !== normalizeSkillLabel(skill.name);
+              const showFullName = shouldRenderSkillSupportingName(skill.shortLabel, skill.name);
               return (
                 <div
                   key={`${skill.category}-${skill.name}`}
