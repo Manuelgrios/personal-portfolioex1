@@ -26,7 +26,10 @@ export function ProjectMedia({ project, className = "" }: ProjectMediaProps) {
   return (
     <div
       className={`relative aspect-video overflow-hidden rounded-xl border border-border/80 bg-surface-soft/70 ${className}`}
+      data-project-field="imageUrl"
+      data-project-field-primary="true"
       data-project-media={showImage ? "image" : "fallback"}
+      data-project-slug={project.slug}
     >
       {showImage ? (
         <img

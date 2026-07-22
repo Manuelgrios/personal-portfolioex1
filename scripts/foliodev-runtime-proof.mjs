@@ -336,6 +336,24 @@ assert(
   "empty user data stays empty with stale theme selected",
 );
 
+// PRM-CARD-LIVE-PREVIEW-J: presentation-neutral markers give editor previews exact field destinations.
+const projectDetailSource = await fs.readFile(path.join(repoRoot, "src/pages/ProjectDetail.tsx"), "utf8");
+const projectCardSource = await fs.readFile(path.join(repoRoot, "src/components/projects/ProjectCard.tsx"), "utf8");
+const projectActionsSource = await fs.readFile(path.join(repoRoot, "src/components/projects/ProjectActions.tsx"), "utf8");
+const projectMediaSource = await fs.readFile(path.join(repoRoot, "src/components/projects/ProjectMedia.tsx"), "utf8");
+const sectionHeaderSource = await fs.readFile(path.join(repoRoot, "src/components/ui/SectionHeader.tsx"), "utf8");
+assert(projectDetailSource.includes('"data-project-field": "title"'), "Project detail registers title");
+assert(projectDetailSource.includes('"data-project-field": "shortDescription"'), "Project detail registers shortDescription");
+for (const field of ["whatYouBuilt", "problemSolved", "outcome"]) {
+  assert(projectDetailSource.includes(`projectField="${field}"`), `Project detail registers ${field}`);
+}
+assert(projectDetailSource.includes('data-project-field="technologiesUsed"'), "Project detail registers technologiesUsed");
+assert(projectDetailSource.includes("data-project-field-primary") && projectDetailSource.includes("data-project-field-occurrence"), "Project detail distinguishes primary and secondary field occurrences");
+assert(projectCardSource.includes('data-project-field="title"') && projectCardSource.includes('data-project-field="shortDescription"'), "Project cards mark title and summary fields");
+assert(projectActionsSource.includes('data-project-field={link.label === "GitHub" ? "githubUrl" : "liveDemoUrl"}'), "Project actions mark exact GitHub and Live Demo fields");
+assert(projectMediaSource.includes('data-project-field="imageUrl"'), "Project media marks the Image URL destination");
+assert(sectionHeaderSource.includes("titleAttributes") && sectionHeaderSource.includes("descriptionAttributes"), "SectionHeader forwards presentation-neutral field attributes");
+
 if (failures > 0) {
   console.error(`\nFolioDev strict preview normalization proof FAILED with ${failures} assertion(s).`);
   process.exit(1);

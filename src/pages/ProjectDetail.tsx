@@ -1,3 +1,4 @@
+import type { HTMLAttributes } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ProjectActions } from "../components/projects/ProjectActions";
 import { ProjectMedia } from "../components/projects/ProjectMedia";
@@ -27,11 +28,19 @@ export function ProjectDetail() {
   }
 
   return (
-    <article className="space-y-8">
+    <article className="space-y-8" data-project-slug={project.slug}>
       <SectionHeader
+        descriptionAttributes={{
+          "data-project-field": "shortDescription",
+          "data-project-field-primary": "true",
+        } as HTMLAttributes<HTMLParagraphElement>}
         eyebrow="Project"
         title={project.title}
         description={project.summary}
+        titleAttributes={{
+          "data-project-field": "title",
+          "data-project-field-primary": "true",
+        } as HTMLAttributes<HTMLHeadingElement>}
       />
       <Card className="overflow-hidden p-4 md:p-5">
         <ProjectMedia project={project} />
@@ -39,13 +48,13 @@ export function ProjectDetail() {
       </Card>
       <div className="grid gap-5 md:grid-cols-2">
         <DetailCard title="Overview" body={project.overview} />
-        <DetailCard title="Challenge" body={project.challenge} />
-        <DetailCard title="Approach" body={project.approach} />
-        <ListCard title="Features" items={project.features} />
-        <ListCard title="Workflow" items={project.workflow} />
-        <ListCard title="Results" items={project.results} />
+        <DetailCard title="Challenge" body={project.challenge} projectField="problemSolved" primary />
+        <DetailCard title="Approach" body={project.approach} projectField="whatYouBuilt" primary />
+        <ListCard title="Features" items={project.features} projectField="whatYouBuilt" />
+        <ListCard title="Workflow" items={project.workflow} projectField="whatYouBuilt" />
+        <ListCard title="Results" items={project.results} projectField="outcome" primary />
       </div>
-      <Card>
+      <Card data-project-field="technologiesUsed" data-project-field-primary="true">
         <h2 className="text-lg font-semibold text-text">Technologies</h2>
         <div className="mt-5 flex flex-wrap gap-2">
           {project.technologies.map((technology) => (
@@ -56,6 +65,12 @@ export function ProjectDetail() {
       <ListCard
         title="Interview Talking Points"
         items={project.interviewTalkingPoints}
+        itemProjectField={(item) => {
+          if (item === project.challenge) return "problemSolved";
+          if (item === project.approach) return "whatYouBuilt";
+          if (project.results?.includes(item)) return "outcome";
+          return undefined;
+        }}
       />
     </article>
   );
@@ -64,15 +79,21 @@ export function ProjectDetail() {
 type DetailCardProps = {
   title: string;
   body?: string;
+  projectField?: string;
+  primary?: boolean;
 };
 
-function DetailCard({ title, body }: DetailCardProps) {
+function DetailCard({ title, body, projectField, primary = false }: DetailCardProps) {
   if (!body) {
     return null;
   }
 
   return (
-    <Card>
+    <Card
+      data-project-field={projectField}
+      data-project-field-occurrence={projectField && !primary ? "secondary" : undefined}
+      data-project-field-primary={projectField && primary ? "true" : undefined}
+    >
       <h2 className="text-lg font-semibold text-text">{title}</h2>
       <p className="mt-3 leading-7 text-muted">{body}</p>
     </Card>
@@ -82,19 +103,31 @@ function DetailCard({ title, body }: DetailCardProps) {
 type ListCardProps = {
   title: string;
   items?: string[];
+  projectField?: string;
+  primary?: boolean;
+  itemProjectField?: (item: string) => string | undefined;
 };
 
-function ListCard({ title, items }: ListCardProps) {
+function ListCard({ title, items, projectField, primary = false, itemProjectField }: ListCardProps) {
   if (!items || items.length === 0) {
     return null;
   }
 
   return (
-    <Card>
+    <Card
+      data-project-field={projectField}
+      data-project-field-occurrence={projectField && !primary ? "secondary" : undefined}
+      data-project-field-primary={projectField && primary ? "true" : undefined}
+    >
       <h2 className="text-lg font-semibold text-text">{title}</h2>
       <ul className="mt-4 space-y-3 text-muted">
         {items.map((item) => (
-          <li key={item} className="leading-7">
+          <li
+            className="leading-7"
+            data-project-field={itemProjectField?.(item)}
+            data-project-field-occurrence={itemProjectField?.(item) ? "secondary" : undefined}
+            key={item}
+          >
             {item}
           </li>
         ))}
