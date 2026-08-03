@@ -12,7 +12,7 @@ import { getIcon } from "../lib/icons";
 
 export function Home() {
   const { currentTheme } = useTheme();
-  const { profile, projects, experience, skillItems, socialLinks, editorPlaceholders, editorPlaceholderPolicy } = useRuntimeData();
+  const { profile, projects, experience, skillCategories, socialLinks, editorPlaceholders, editorPlaceholderPolicy } = useRuntimeData();
   const featuredProjects = projects
     .filter((project) => project.featured)
     .slice(0, 6);
@@ -304,26 +304,33 @@ export function Home() {
             {profile.sections.skills.description}
           </p>
         ) : null}
-        {skillItems.length > 0 ? (
+        {skillCategories.length > 0 ? (
           <div className="mt-6 grid min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-3">
-            {skillItems.map((skill) => {
-              const showFullName = shouldRenderSkillSupportingName(skill.shortLabel, skill.name);
-              return (
-                <div
-                  key={`${skill.category}-${skill.name}`}
-                  className="flex h-auto min-h-24 min-w-0 flex-col items-center justify-center gap-2 rounded-lg border border-accent-dark/55 bg-background/36 px-4 py-4 text-center transition-colors hover:border-accent"
-                >
-                  <span className="max-w-full text-balance text-[clamp(1rem,0.95rem+0.25vw,1.125rem)] font-black leading-[1.25] text-accent [hyphens:none] [overflow-wrap:anywhere]">
-                    {skill.shortLabel}
-                  </span>
-                  {showFullName ? (
-                    <span className="max-w-full text-balance text-sm font-medium leading-5 text-text [hyphens:none] [overflow-wrap:anywhere]">
-                      {skill.name}
-                    </span>
-                  ) : null}
+            {skillCategories.map((group) => (
+              <div
+                key={group.category}
+                className="flex h-auto min-w-0 flex-col gap-3 rounded-lg border border-accent-dark/55 bg-background/36 px-4 py-4 transition-colors hover:border-accent"
+              >
+                <h3 className="max-w-full text-balance text-[clamp(0.8125rem,0.78rem+0.15vw,0.875rem)] font-bold uppercase leading-[1.25] tracking-[0.08em] text-accent [hyphens:none] [overflow-wrap:anywhere]">
+                  {group.category}
+                </h3>
+                <div className="flex min-w-0 flex-wrap gap-2">
+                  {group.items.map((skill) => {
+                    // PRM-DEEPSEEK-CONTEXT-O: one label per chip. The full name renders only when it
+                    // adds meaning beyond the concise short label, otherwise the short label stands in.
+                    const showFullName = shouldRenderSkillSupportingName(skill.shortLabel, skill.name);
+                    return (
+                      <Tag
+                        key={`${group.category}-${skill.name}`}
+                        className="max-w-full whitespace-normal break-words text-left font-medium leading-5 text-text [hyphens:none] [overflow-wrap:anywhere]"
+                      >
+                        {showFullName ? skill.name : skill.shortLabel}
+                      </Tag>
+                    );
+                  })}
                 </div>
-              );
-            })}
+              </div>
+            ))}
           </div>
         ) : editorPlaceholders ? (
           <div
