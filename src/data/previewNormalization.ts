@@ -188,6 +188,16 @@ function normalizeUrl(value: unknown): string {
   return normalizeHttpUrl(`https://${url}`);
 }
 
+/** Project media is an untrusted remote resource and only accepts an explicit HTTP(S) URL. */
+function normalizeProjectHttpUrl(value: unknown): string {
+  const url = text(value);
+  if (!/^https?:\/\//i.test(url) || /\s/.test(url)) {
+    return "";
+  }
+
+  return normalizeHttpUrl(url);
+}
+
 function displayUrl(value: string): string {
   const linkedInHandle = value.match(/linkedin\.com\/in\/([^/?#]+)/i)?.[1];
   if (linkedInHandle) {
@@ -421,8 +431,8 @@ function normalizeProjects(value: unknown): Project[] {
       const description = text(project.description) || summary;
       const technologies = textArray(project.technologies);
       const tags = textArray(project.tags);
-      const githubUrl = normalizeUrl(project.githubUrl);
-      const liveDemoUrl = normalizeUrl(project.liveDemoUrl);
+      const githubUrl = normalizeProjectHttpUrl(project.githubUrl);
+      const liveDemoUrl = normalizeProjectHttpUrl(project.liveDemoUrl);
       const links = [
         githubUrl ? { label: "GitHub", href: githubUrl } : undefined,
         liveDemoUrl ? { label: "Live Demo", href: liveDemoUrl } : undefined,
@@ -439,6 +449,7 @@ function normalizeProjects(value: unknown): Project[] {
         tags: tags.length > 0 ? tags : technologies,
         icon: normalizeProjectIcon(project.icon),
         featured: booleanValue(project.featured, index < 3),
+        imageUrl: normalizeProjectHttpUrl(project.imageUrl),
         links,
         overview: text(project.overview) || description,
         challenge: text(project.challenge) || text(project.problemSolved),

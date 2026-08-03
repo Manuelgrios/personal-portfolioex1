@@ -1,11 +1,12 @@
 import { ArrowRight, CheckCircle2, Mail } from "lucide-react";
 import type { CSSProperties } from "react";
-import { Link } from "react-router-dom";
+import { ProjectCard } from "../components/projects/ProjectCard";
 import { useTheme } from "../components/theme/useTheme";
 import { Button } from "../components/ui/Button";
 import { Card } from "../components/ui/Card";
 import { Tag } from "../components/ui/Tag";
 import { useRuntimeData } from "../data/runtimeData";
+import { shouldRenderSkillSupportingName } from "../data/skillLabelPresentation";
 import { assetPath } from "../lib/assets";
 import { getIcon } from "../lib/icons";
 
@@ -270,42 +271,9 @@ export function Home() {
 
         {featuredProjects.length > 0 ? (
           <div className="mt-7 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-            {featuredProjects.map((project) => {
-              const Icon = getIcon(project.icon);
-
-              return (
-                <Link key={project.slug} to={`/projects/${project.slug}`}>
-                  <div className="group h-full rounded-xl border border-accent-dark/45 bg-card-soft/42 p-4 transition hover:border-accent hover:bg-card-soft/70">
-                    <div className="flex items-start gap-4">
-                      <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-border bg-surface-soft/80 text-accent">
-                        <Icon size={25} />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex items-start justify-between gap-3">
-                          <h3 className="text-lg font-bold leading-snug text-text">
-                            {project.title}
-                          </h3>
-                          <ArrowRight
-                            className="mt-1 text-accent-dark opacity-50 transition group-hover:translate-x-1 group-hover:opacity-100"
-                            size={16}
-                          />
-                        </div>
-                        <p className="mt-3 text-sm leading-6 text-muted">
-                          {project.summary}
-                        </p>
-                        {project.tags.length > 0 ? (
-                          <div className="mt-4 flex flex-wrap gap-2">
-                            {project.tags.map((tag) => (
-                              <Tag key={tag}>{tag}</Tag>
-                            ))}
-                          </div>
-                        ) : null}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
+            {featuredProjects.map((project) => (
+              <ProjectCard key={project.slug} project={project} variant="home" />
+            ))}
           </div>
         ) : null}
       </Card>
@@ -337,20 +305,25 @@ export function Home() {
           </p>
         ) : null}
         {skillItems.length > 0 ? (
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12">
-            {skillItems.map((skill) => (
-              <div
-                key={`${skill.category}-${skill.name}`}
-                className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-accent-dark/55 bg-background/36 px-3 py-3 text-center transition hover:border-accent"
-              >
-                <span className="text-xl font-black text-accent">
-                  {skill.shortLabel}
-                </span>
-                <span className="text-xs font-medium text-text">
-                  {skill.name}
-                </span>
-              </div>
-            ))}
+          <div className="mt-6 grid min-w-0 grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-3">
+            {skillItems.map((skill) => {
+              const showFullName = shouldRenderSkillSupportingName(skill.shortLabel, skill.name);
+              return (
+                <div
+                  key={`${skill.category}-${skill.name}`}
+                  className="flex h-auto min-h-24 min-w-0 flex-col items-center justify-center gap-2 rounded-lg border border-accent-dark/55 bg-background/36 px-4 py-4 text-center transition-colors hover:border-accent"
+                >
+                  <span className="max-w-full text-balance text-[clamp(1rem,0.95rem+0.25vw,1.125rem)] font-black leading-[1.25] text-accent [hyphens:none] [overflow-wrap:anywhere]">
+                    {skill.shortLabel}
+                  </span>
+                  {showFullName ? (
+                    <span className="max-w-full text-balance text-sm font-medium leading-5 text-text [hyphens:none] [overflow-wrap:anywhere]">
+                      {skill.name}
+                    </span>
+                  ) : null}
+                </div>
+              );
+            })}
           </div>
         ) : editorPlaceholders ? (
           <div

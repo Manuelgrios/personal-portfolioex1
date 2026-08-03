@@ -173,6 +173,41 @@ const validProject = normalizePreviewData(
 );
 assert(validProject.projects.length === 1 && validProject.projects[0].title === "Accessibility Dashboard", "valid project kept with real title");
 
+const projectMediaAndLinks = normalizePreviewData(
+  emptyPreview({
+    projects: [
+      {
+        title: "Project with proof",
+        summary: "Carries media and external actions.",
+        imageUrl: "  https://images.example.com/project.png  ",
+        githubUrl: "https://github.com/example/project",
+        liveDemoUrl: "https://project.example.com/demo",
+      },
+    ],
+  }),
+).projects[0];
+assert(projectMediaAndLinks.imageUrl === "https://images.example.com/project.png", "project image keeps a valid explicit HTTPS URL");
+assert(
+  projectMediaAndLinks.links?.map((link) => link.label).join(",") === "GitHub,Live Demo",
+  "project GitHub and live demo links become exact actions",
+);
+
+const unsafeProjectUrls = normalizePreviewData(
+  emptyPreview({
+    projects: [
+      {
+        title: "Unsafe URL proof",
+        summary: "Invalid project URLs are removed.",
+        imageUrl: "javascript:alert(1)",
+        githubUrl: "mailto:owner@example.com",
+        liveDemoUrl: "/relative-demo",
+      },
+    ],
+  }),
+).projects[0];
+assert(unsafeProjectUrls.imageUrl === "", "unsafe project image URL becomes empty");
+assert(unsafeProjectUrls.links?.length === 0, "mail and relative project actions are removed");
+
 // 3. Empty skill groups -> no static tiles; valid skill kept.
 assert(normalizePreviewData(emptyPreview({ skills: { groups: [] } })).skillItems.length === 0, "empty skill groups -> no static tiles");
 const validSkills = normalizePreviewData(emptyPreview({ skills: { groups: [{ category: "Web", items: [{ name: "React" }] }] } }));
@@ -299,6 +334,43 @@ assert(
 assert(
   staleTheme.projects.length === 0 && staleTheme.skillItems.length === 0 && staleTheme.socialLinks.length === 0,
   "empty user data stays empty with stale theme selected",
+);
+
+// PRM-CARD-LIVE-PREVIEW-J: presentation-neutral markers give editor previews exact field destinations.
+const projectDetailSource = await fs.readFile(path.join(repoRoot, "src/pages/ProjectDetail.tsx"), "utf8");
+const projectCardSource = await fs.readFile(path.join(repoRoot, "src/components/projects/ProjectCard.tsx"), "utf8");
+const projectActionsSource = await fs.readFile(path.join(repoRoot, "src/components/projects/ProjectActions.tsx"), "utf8");
+const projectMediaSource = await fs.readFile(path.join(repoRoot, "src/components/projects/ProjectMedia.tsx"), "utf8");
+const sectionHeaderSource = await fs.readFile(path.join(repoRoot, "src/components/ui/SectionHeader.tsx"), "utf8");
+const homeSource = await fs.readFile(path.join(repoRoot, "src/pages/Home.tsx"), "utf8");
+const skillLabelPresentationSource = await fs.readFile(path.join(repoRoot, "src/data/skillLabelPresentation.ts"), "utf8");
+assert(projectDetailSource.includes('"data-project-field": "title"'), "Project detail registers title");
+assert(projectDetailSource.includes('"data-project-field": "shortDescription"'), "Project detail registers shortDescription");
+for (const field of ["whatYouBuilt", "problemSolved", "outcome"]) {
+  assert(projectDetailSource.includes(`projectField="${field}"`), `Project detail registers ${field}`);
+}
+assert(projectDetailSource.includes('data-project-field="technologiesUsed"'), "Project detail registers technologiesUsed");
+assert(projectDetailSource.includes("data-project-field-primary") && projectDetailSource.includes("data-project-field-occurrence"), "Project detail distinguishes primary and secondary field occurrences");
+assert(projectCardSource.includes('data-project-field="title"') && projectCardSource.includes('data-project-field="shortDescription"'), "Project cards mark title and summary fields");
+assert(projectActionsSource.includes('data-project-field={link.label === "GitHub" ? "githubUrl" : "liveDemoUrl"}'), "Project actions mark exact GitHub and Live Demo fields");
+assert(projectMediaSource.includes('data-project-field="imageUrl"'), "Project media marks the Image URL destination");
+assert(sectionHeaderSource.includes("titleAttributes") && sectionHeaderSource.includes("descriptionAttributes"), "SectionHeader forwards presentation-neutral field attributes");
+
+// PRM-SKILLS-AI-L: skills keep a readable minimum width and duplicate labels render once.
+assert(
+  homeSource.includes("grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))]"),
+  "skill grid uses adaptive minimum-width columns",
+);
+assert(!homeSource.includes("xl:grid-cols-12"), "skill grid no longer forces twelve desktop columns");
+assert(
+  homeSource.includes("shouldRenderSkillSupportingName(skill.shortLabel, skill.name)")
+    && skillLabelPresentationSource.includes("normalizeSkillLabel(shortLabel) !== normalizeSkillLabel(name)"),
+  "skill card delegates normalized duplicate suppression to the shared presentation helper",
+);
+assert(skillLabelPresentationSource.includes("/[._/-]+/g"), "normalized duplicate labels tolerate safe punctuation variants");
+assert(
+  homeSource.includes("[overflow-wrap:anywhere]") && homeSource.includes("[hyphens:none]") && homeSource.includes("min-w-0"),
+  "skill cards provide overlap-safe long-label wrapping",
 );
 
 if (failures > 0) {
