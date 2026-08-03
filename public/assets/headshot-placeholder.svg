@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 700" role="img" aria-label="Headshot placeholder">
+  <title>Headshot placeholder</title>
+  <defs>
+    <linearGradient id="placeholderFill" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#9aa7bd" stop-opacity="0.42" />
+      <stop offset="100%" stop-color="#9aa7bd" stop-opacity="0.16" />
+    </linearGradient>
+  </defs>
+  <g fill="none" stroke="#9aa7bd" stroke-opacity="0.45" stroke-width="3">
+    <circle cx="230" cy="236" r="112" fill="url(#placeholderFill)" />
+    <path
+      d="M64 700c0-96 74.4-174 166-174s166 78 166 174"
+      fill="url(#placeholderFill)"
+      stroke-linecap="round"
+    />
+  </g>
+  <text
+    x="230"
+    y="676"
+    fill="#9aa7bd"
+    fill-opacity="0.7"
+    font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    font-size="24"
+    font-weight="600"
+    letter-spacing="1.5"
+    text-anchor="middle"
+  >
+    Your headshot
+  </text>
+</svg>

@@ -1,15 +1,14 @@
-import { assetPath } from "../lib/assets";
 import type { ThemeId } from "./themes";
 
 export const siteConfig = {
-  siteTitle: "Manuel Garnica | Portfolio",
+  siteTitle: "Portfolio",
   seoDescription:
-    "Personal portfolio for Manuel Garnica, Applied Computing and Data Visualization student at University of Washington Bothell.",
+    "Personal portfolio template. Replace this placeholder content with your own profile, projects, and skills.",
   copyrightYear: 2026,
   brand: {
-    initials: "MG",
-    name: "Manuel Garnica",
-    logoText: "MG",
+    initials: "YN",
+    name: "Your name",
+    logoText: "YN",
   },
   theme: {
     activeTheme: "midnight-blue" satisfies ThemeId,
@@ -18,7 +17,7 @@ export const siteConfig = {
   },
   resume: {
     label: "Resume",
-    path: assetPath("assets/resume/Manuel_Garnica_Resume.docx"),
-    download: true,
+    path: "",
+    download: false,
   },
 };

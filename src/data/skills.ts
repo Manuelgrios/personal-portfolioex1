@@ -12,46 +12,26 @@ export type SkillItem = {
 
 export const skillCategories: SkillCategory[] = [
   {
-    category: "Languages",
+    category: "Skill group one",
     items: [
-      { name: "Python", shortLabel: "Py", category: "Languages" },
-      { name: "JavaScript", shortLabel: "JS", category: "Languages" },
-      { name: "TypeScript", shortLabel: "TS", category: "Languages" },
-      { name: "C++", shortLabel: "C++", category: "Languages" },
-      { name: "C#", shortLabel: "C#", category: "Languages" },
+      { name: "Skill one", shortLabel: "S1", category: "Skill group one" },
+      { name: "Skill two", shortLabel: "S2", category: "Skill group one" },
+      { name: "Skill three", shortLabel: "S3", category: "Skill group one" },
     ],
   },
   {
-    category: "Frontend",
+    category: "Skill group two",
     items: [
-      { name: "React", shortLabel: "React", category: "Frontend" },
-      { name: "HTML/CSS", shortLabel: "</>", category: "Frontend" },
+      { name: "Skill four", shortLabel: "S4", category: "Skill group two" },
+      { name: "Skill five", shortLabel: "S5", category: "Skill group two" },
+      { name: "Skill six", shortLabel: "S6", category: "Skill group two" },
     ],
   },
   {
-    category: "Tools and Frameworks",
+    category: "Skill group three",
     items: [
-      { name: "Flask", shortLabel: "Fl", category: "Tools and Frameworks" },
-      { name: "Git", shortLabel: "Git", category: "Tools and Frameworks" },
-      {
-        name: "GitHub Actions",
-        shortLabel: "GA",
-        category: "Tools and Frameworks",
-      },
-      { name: "Unity", shortLabel: "U", category: "Tools and Frameworks" },
-    ],
-  },
-  {
-    category: "Data and Analysis",
-    items: [
-      {
-        name: "Data Visualization",
-        shortLabel: "Viz",
-        category: "Data and Analysis",
-      },
-      { name: "Pandas", shortLabel: "Pd", category: "Data and Analysis" },
-      { name: "Matplotlib", shortLabel: "Mpl", category: "Data and Analysis" },
-      { name: "Debugging", shortLabel: "Debug", category: "Data and Analysis" },
+      { name: "Skill seven", shortLabel: "S7", category: "Skill group three" },
+      { name: "Skill eight", shortLabel: "S8", category: "Skill group three" },
     ],
   },
 ];

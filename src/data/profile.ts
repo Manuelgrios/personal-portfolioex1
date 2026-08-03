@@ -67,46 +67,42 @@ export type Profile = {
   };
 };
 
-const school = "University of Washington Bothell";
+const school = "Your school";
 const degrees = education.map((item) => item.degree);
 
 export const profile: Profile = {
   name: siteConfig.brand.name,
-  headline: "Aspiring Full-Stack Software Engineer.",
-  subtitle: "Applied Computing and Data Visualization Student",
+  headline: "Target role or headline",
+  subtitle: "Your program or focus area",
   school,
   degrees,
-  location: "Seattle, Washington",
-  email: "manuelgarios@outlook.com",
-  bio:
-    "I'm an aspiring software engineer based in Washington with an academic background in Applied Computing and Data Visualization at the University of Washington Bothell. My work focuses on building small but useful software tools, debugging systems, automating workflows, and using data visualization to make technical information easier to understand.",
-  shortBio:
-    "I'm an Applied Computing and Data Visualization student at the University of Washington Bothell. I build software tools, debug systems, automate workflows, and use visual explanations to make technical problems easier to understand.",
+  location: "Your location",
+  email: "you@example.com",
+  bio: "Short introduction will appear here.",
+  shortBio: "Short introduction will appear here.",
   focusAreas: [
-    "Software engineering",
-    "Data visualization",
-    "Tools and automation",
-    "Debugging",
+    "Your focus area",
+    "Another focus area",
+    "One more focus area",
   ],
   hero: {
-    eyebrow: "Applied Computing + Data Visualization Student",
-    headline: ["Data Science Analyst,", "Software Developer,"],
-    highlightedHeadline: "Computer Science",
-    body:
-      "I'm an Applied Computing and Data Visualization student at the University of Washington Bothell. I build software tools, debug systems, automate workflows, and use visual explanations to make technical problems easier to understand.",
+    eyebrow: "Your headline",
+    headline: ["Your name"],
+    highlightedHeadline: "Target role or headline",
+    body: "Short introduction will appear here.",
     primaryCta: { label: "View Projects", href: "/#projects" },
     secondaryCta: { label: "Contact Me", href: "/#contact" },
     image: {
-      src: "assets/headshot.png",
-      alt: "Professional headshot of Manuel Garnica",
+      src: "assets/headshot-placeholder.svg",
+      alt: "Your headshot",
     },
   },
   sections: {
     about: {
       eyebrow: "About Me",
-      heading: "Hi there, my name is Manuel.",
+      heading: "About",
       body: [
-        "I'm an aspiring software engineer based in Washington with an academic background in Applied Computing and Data Visualization at the University of Washington Bothell. My work focuses on software tools, debugging, automation, and data visualization, with projects that help me practice writing cleaner code, testing edge cases, and explaining technical decisions clearly.",
+        "Add a short introduction about yourself, your focus, and what you are building.",
       ],
       infoGroups: [
         {
@@ -116,29 +112,28 @@ export const profile: Profile = {
         },
         {
           iconKey: "code",
-          label: "Technical Focus",
-          lines: ["Software Engineering", "Automation & Debugging"],
+          label: "Focus",
+          lines: ["Your focus area", "Another focus area"],
         },
         {
           iconKey: "chart",
-          label: "Data Focus",
-          lines: ["Data Visualization", "Clear Technical Communication"],
+          label: "Interests",
+          lines: ["Your area of interest", "Another area of interest"],
         },
       ],
       enjoyHeading: "What I focus on",
       enjoyItems: [
-        "Debugging problems until the cause is clear",
-        "Building tools that reduce repeated manual work",
-        "Writing code that is easier to test and update",
-        "Explaining technical work through clear visuals and documentation",
+        "Your focus area",
+        "Another focus area",
+        "One more focus area",
+        "Something you want to learn next",
       ],
     },
     projects: {
       eyebrow: "Projects",
       heading: "Things I've Built",
       indexHeading: "Project index",
-      description:
-        "Selected projects focused on software tools, automation, debugging, data structures, and data visualization.",
+      description: "Your selected projects will appear here.",
       viewAllLabel: "View All Projects",
     },
     experience: {
@@ -153,8 +148,7 @@ export const profile: Profile = {
       eyebrow: "Contact",
       heading: "Let's Connect",
       pageHeading: "Get in touch",
-      body:
-        "I'm open to internships, project collaboration, and technical work involving software tools, automation, debugging, or data visualization.",
+      body: "Add a short note about the work you are open to.",
     },
   },
 };
