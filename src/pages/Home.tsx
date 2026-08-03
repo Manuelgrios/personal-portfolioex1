@@ -11,7 +11,7 @@ import { getIcon } from "../lib/icons";
 
 export function Home() {
   const { currentTheme } = useTheme();
-  const { profile, projects, experience, skillItems, socialLinks, editorPlaceholders, editorPlaceholderPolicy } = useRuntimeData();
+  const { profile, projects, experience, skillCategories, socialLinks, editorPlaceholders, editorPlaceholderPolicy } = useRuntimeData();
   const featuredProjects = projects
     .filter((project) => project.featured)
     .slice(0, 6);
@@ -336,19 +336,26 @@ export function Home() {
             {profile.sections.skills.description}
           </p>
         ) : null}
-        {skillItems.length > 0 ? (
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-12">
-            {skillItems.map((skill) => (
+        {skillCategories.length > 0 ? (
+          <div className="mt-6 grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {skillCategories.map((group) => (
               <div
-                key={`${skill.category}-${skill.name}`}
-                className="flex min-h-20 flex-col items-center justify-center gap-2 rounded-lg border border-accent-dark/55 bg-background/36 px-3 py-3 text-center transition hover:border-accent"
+                key={group.category}
+                className="flex min-w-0 flex-col gap-3 rounded-lg border border-accent-dark/55 bg-background/36 p-4"
               >
-                <span className="text-xl font-black text-accent">
-                  {skill.shortLabel}
-                </span>
-                <span className="text-xs font-medium text-text">
-                  {skill.name}
-                </span>
+                <h3 className="text-sm font-bold uppercase tracking-wide text-accent [overflow-wrap:anywhere]">
+                  {group.category}
+                </h3>
+                <div className="flex flex-wrap gap-2">
+                  {group.items.map((skill) => (
+                    <Tag
+                      key={skill.name}
+                      className="max-w-full whitespace-normal break-words [overflow-wrap:anywhere]"
+                    >
+                      {skill.name}
+                    </Tag>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
